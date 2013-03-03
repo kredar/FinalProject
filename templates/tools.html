@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script LANGUAGE="JavaScript">
+    <!-- Generic Unit Conversion Program
+    // Author    : Jonathan Weesner (jweesner@cyberstation.net)  21 Nov 95
+    // Revised   : Mark Blair - Revisions, temerature routines added (mblair at blairworks.com)  5 Aug 06
+    // Copyright of original script : You want it? Take it! ... but leave the Author line intact please!
+    function convertform(form){
+        var firstvalue = 0;
+        for (var i = 1; i <= form.count; i++) {
+            // Find first non-blank entry
+            if (form.elements[i].value != null && form.elements[i].value.length != 0) {
+                if (i == 1 && form.elements[2].value != "") return false;
+                firstvalue = form.elements[i].value / form.elements[i].factor;
+                break;
+            }
+        }
+        if (firstvalue == 0) {
+            clearform(form);
+            return false;
+        }
+        for (var i = 1; i <= form.count; i++)
+            form.elements[i].value = formatvalue((firstvalue * form.elements[i].factor), form.rsize);
+        return true;
+    }
+    function converttempform(form){
+        var firstvalue = 0;
+
+        if (form.elements[1].value != null && form.elements[1].value.length != 0) {
+            form.elements[2].value = (Math.round((100/(212-32) * (form.elements[1].value - 32))*100))/100;
+            return true;
+        }
+
+        if (form.elements[2].value != null && form.elements[2].value.length != 0) {
+            form.elements[1].value = (Math.round(((212-32)/100 * form.elements[2].value + 32)*100))/100;
+            return true;
+        }
+    }
+    function formatvalue(input, rsize) {
+        var invalid = "**************************";
+        var nines = "999999999999999999999999";
+        var strin = "" + input;
+        var fltin = parseFloat(strin);
+        if (strin.length <= rsize) return strin;
+        if (strin.indexOf("e") != -1 ||
+                fltin > parseFloat(nines.substring(0,rsize)+".4"))
+            return invalid.substring(0, rsize);
+        var rounded = "" + (fltin + (fltin - parseFloat(strin.substring(0, rsize))));
+        return rounded.substring(0, rsize);
+    }
+    function resetform(form) {
+        clearform(form);
+        form.elements[1].value = 1;
+        convertform(form);
+        return true;
+    }
+    function resettempform(form) {
+        cleartempform(form);
+        form.elements[1].value = 212;
+        converttempform(form);
+        return true;
+    }
+    function clearform(form) {
+        for (var i = 1; i <= form.count; i++) form.elements[i].value = "";
+        return true;
+    }
+    function cleartempform(form) {
+        for (var i = 1; i <= form.count; i++) form.elements[i].value = "";
+        return true;
+    }
+    <!-- done hiding from old browsers -->
+    <!-- to add calibrate, use: <input TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)"> -->
+</script>
+<h3>Convert weight measurements</h3>
+<form>
+    <table border="0" class="converter">
+        <tr>
+            <th>oz</th>
+            <th>pounds</th>
+            <th>grams</th>
+            <th>kg</th>
+            <td><input TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)" style="display:none;"></td>
+        </tr>
+        <tr>
+            <td><input TYPE="TEXT" NAME="val1" class="converterBox" onFocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val2" class="converterBox" onFocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val3" class="converterBox" onFocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val4" class="converterBox" onFocus="clearform(this.form)" /></td>
+            <td><input TYPE="button" VALUE="Calc" onclick="convertform(this.form)"></td>
+        </tr>
+    </table>
+</form>
+
+<script LANGUAGE="JavaScript">
+    <!-- Set conversion factors for each item in form.
+            document.forms[0].count = 4;
+    document.forms[0].rsize = 5;
+    document.forms[0].val1.factor = 1;
+    document.forms[0].val2.factor = .0625;
+    document.forms[0].val3.factor = 28.349523;
+    document.forms[0].val4.factor = .028349523;
+    <!-- done hiding from old browsers -->
+</script>
+
+<h3>Convert volume measurements</h3>
+<form>
+    <table border="0" class="converter">
+        <tr>
+            <th>ml</th>
+            <th>tsp</th>
+            <th>tbsp</th>
+            <th>fl oz</th>
+            <th>cups</th>
+            <th>pints</th>
+            <th>quarts</th>
+            <th>liters</th>
+            <th>gallons</th>
+            <td><input TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)" style="display:none;"></td>
+        </tr>
+        <tr>
+            <td><input TYPE="TEXT" NAME="val1" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val2" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val3" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val4" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val5" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val6" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val7" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val8" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val9" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="button" VALUE="Calc" onclick="convertform(this.form)"></td>
+        </tr>
+    </table>
+</form>
+
+<script LANGUAGE="JavaScript">
+    // Set conversion factors for each item in form.
+    document.forms[1].count = 9;
+
+    document.forms[1].rsize = 5;
+    document.forms[1].val1.factor = 1; // ml to ml
+    document.forms[1].val2.factor = 0.2028841; // ml to tsp
+    document.forms[1].val3.factor = 0.06762805; // ml to tbsp
+    document.forms[1].val4.factor = 0.03381402; // ml to oz
+    document.forms[1].val5.factor = 0.004226753; // ml to cups
+    document.forms[1].val6.factor = 0.002114; // ml to pints
+    document.forms[1].val7.factor = 0.001057; // ml to quarts
+    document.forms[1].val8.factor = 0.001; // ml to liters
+    document.forms[1].val9.factor = 0.000264; // ml to gallons
+</script>
+
+
+<h3>Convert butter measurements</h3>
+<form>
+    <table border="0" class="converter">
+        <tr>
+            <th>grams</th>
+            <th>tbsp</th>
+            <th>oz</th>
+            <th>cup</th>
+            <th>stick</th>
+            <td><input TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)" style="display:none;"></td>
+        </tr>
+        <tr>
+            <td><input TYPE="TEXT" NAME="val1" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val2" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val3" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val4" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val5" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="button" VALUE="Calc" onclick="convertform(this.form)"></td>
+        </tr>
+    </table>
+</form>
+
+<script LANGUAGE="JavaScript">
+    // Set conversion factors for each item in form.
+    document.forms[2].count = 5;
+    document.forms[2].rsize = 5;
+    document.forms[2].val1.factor = 1; // g to g
+    document.forms[2].val2.factor = 0.070547924; // g to tbsp
+    document.forms[2].val3.factor = 0.035273962; // g to oz
+    document.forms[2].val4.factor = 0.004409245; // g to cup
+    document.forms[2].val5.factor =  0.00881849; // g to stick
+</script>
+
+
+<h3>Convert length measurements</h3>
+<form>
+    <table border="0" class="converter">
+        <tr>
+            <th>mm</th>
+            <th>cm</th>
+            <th>in</th>
+            <td><input TYPE="button" VALUE="Calibrate" onclick="resetform(this.form)" style="display:none;"></td>
+        </tr>
+        <tr>
+            <td><input TYPE="TEXT" NAME="val1" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val2" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val3" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="button" VALUE="Calc" onclick="convertform(this.form)"></td>
+        </tr>
+    </table>
+</form>
+
+<script LANGUAGE="JavaScript">
+    // Set conversion factors for each item in form.
+    document.forms[3].count = 3;
+    document.forms[3].rsize = 5;
+    document.forms[3].val1.factor = 1; // mm to mm
+    document.forms[3].val2.factor = .10; //mm to cm
+    document.forms[3].val3.factor = .03937007874; //mm to in
+</script>
+
+<h3>Convert oven temperatures</h3>
+<!--
+Tempature Converter
+By Kai Yuet (kaiy911@hotmail.com)
+For this script and more,
+Visit http://javascriptkit.com
+-->
+
+<form>
+    <table border="0" class="converter">
+        <tr>
+            <th>F°</th>
+            <th>C°</th>
+            <td><input TYPE="button" VALUE="Calibrate" onclick="resettempform(this.form)" style="display:none;"></td>
+        </tr>
+        <tr>
+            <td><input TYPE="TEXT" NAME="val1" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="TEXT" NAME="val2" class="converterBox" onfocus="clearform(this.form)" /></td>
+            <td><input TYPE="button" VALUE="Calc" onclick="converttempform(this.form)"></td>
+        </tr>
+    </table>
+</FORM>
+<script LANGUAGE="JavaScript">
+    <!-- Set conversion factors for each item in form. -->
+            document.forms[4].count = 2;
+    document.forms[4].rsize = 5;
+    <!-- done hiding from old browsers -->
+{% endblock %}

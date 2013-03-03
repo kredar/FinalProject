@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="/static/main.css" />
+    <link rel="shortcut icon" href="/favicon.ico" >
+    <title>MaCreations</title>
+    {% block head_content %}
+    {% endblock %}
+</head>
+
+<body>
+  <a href="/Welcome" class="main-title">
+      MaCreations
+  </a>
+  <br>
+
+{#  <img src="/images/banner.jpg" width="800" height="200">#}
+  <div class="login-area">
+
+    {% if logged_in %}
+      {{user_name}} (<a class="login-link" href={{ logoutLink }}>logout</a>)
+    {% else %}
+      <a class="login-link" href="/login">login</a>
+      <a class="login-link" href="/signup">signup</a>
+    {% endif %}
+  </div>
+  <div class="edit-history-area">
+
+{#      <a class="login-link" href={{ edit_link }}> edit </a>#}
+{#      <a class="login-link" href={{ history_link }}> history</a>#}
+
+  </div>
+
+  <div class="links-area">
+
+      <a class="login-link" href="/gallery">Gallery</a>
+      <a class="login-link" href="/recipes">Recipes</a>
+      <a class="login-link" href="/blog">Blog</a>
+      {% if isUserAdmin %}
+        <a class="login-link" href="/blog/newpost">New Post</a>
+      {% endif %}
+      <a class="login-link" href="/about">About</a>
+      <a class="login-link" href="/contact">Contact</a>
+  </div>
+
+
+  <div id="content">
+  {% block content %}
+  {% endblock %}
+  </div>
+
+  <div id="footer">&copy; Art Kreimer</div>
+
+</body>
+
+</html>
+

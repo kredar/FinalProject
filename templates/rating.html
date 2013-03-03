@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- include CSS & JS files -->
+    <!-- CSS file -->
+    <link rel="stylesheet" type="text/css" href="/static/jRating.jquery.css" media="screen" />
+    <!-- jQuery files -->
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/jRating.jquery.js"></script>
+    <title></title>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            // simple jRating call
+            $(".basic").jRating();
+
+            // more complex jRating call
+            $(".basic").jRating({
+                step:true,
+                length : 20, // nb of stars
+                onSuccess : function(){
+                    alert('Success : your rate has been saved :)');
+                }
+            });
+
+            // you can rate 3 times ! After, jRating will be disabled
+            $(".basic").jRating({
+                canRateAgain : true,
+                nbRates : 3
+            });
+        });
+    </script>
+</head>
+<body>
+<!-- basic exemple -->
+<div class="exemple">
+
+    <!-- in this exemple, 12 is the average and 1 is the id of the line to update in DB -->
+    <div class="basic" data-average="12" data-id="1"></div>
+
+    <!-- in this other exemple, 8 is the average and 2 is the id of the line to update in DB -->
+    <div class="basic" data-average="8" data-id="2"></div>
+
+</div>
+</body>
+</html>

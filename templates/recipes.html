@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% for p in recipes %}
+        {{ p.render() | safe }}
+        <br><br>
+        <div class="edit-view">
+
+{#            <a  href={{ "/recipes" ~ p.recipe_name }}>view</a>#}
+            {% if isUserAdmin %}
+                <a  href={{ "/recipes/_edit" ~ p.recipe_name }}>edit</a>
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

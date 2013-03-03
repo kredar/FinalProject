@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="content"><h2>Recipe:</h2>
+       {{page.render() | safe}}
+
+          <div class="post-content">
+            {{page._render_text | safe}}
+          </div>
+
+    <div class="post-date">
+    {% if isUserAdmin %}
+        <div class="post-date">
+            <a  href={{ "/recipes/_edit" ~ page.recipe_name }}>edit</a>
+            <a  href={{ "/recipes/_upload" }}>upload Picture</a>
+        </div>
+        {# <img src="/image?img_id=%s"></img> #}
+        {#      <a class="login-link" href={{ history_link }}> history</a>#}
+    {% endif %}
+    </div>
+    <br><br>
+        <div class="rating">
+            <a class="rating">Rating
+                {% if rating %}
+                    {{ rating }}
+                {% else %}
+                    Not rated yet. Be first to rate
+                {% endif %}
+            </a>
+        </div>
+        <br>
+        <div class="addcomment">
+            <form method="post">
+
+                <label for="Rate">Rate:</label>
+                <select name="rating">
+                    <option value="five">Five Star</option>
+                    <option value="four">Four Star</option>
+                    <option value="three">Three Star</option>
+                    <option value="two">Two Star</option>
+                    <option value="one">One Star</option>
+                </select>
+                <input type="submit" value="Submit Rating">
+            </form>
+        </div>
+
+    </div>
+    {#    <div class="last_queried"> Queried {{q_time}} seconds ago</div>#}
+{% endblock %}

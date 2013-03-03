@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form id="contact" action="" method="post" name="contact">
+    <label for="Name">Name:</label>
+    <input id="id_subject" type="text" name="contact_name" maxlength="100">
+    <label for="email">Email:</label>
+    <input id="id_email" type="text" name="email">
+    <label for="subject">Subject:</label>
+    <input id="id_subject" type="text" name="subject" maxlength="100">
+    <label for="message">Message:</label>
+    <textarea id="id_message" rows="10" cols="40" name="message"></textarea>
+    <br>
+    <input type="submit" value="Send">
+</form>
+{% endblock %}

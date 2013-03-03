@@ -1,0 +1,20 @@
+<div id="post">
+  <div class="post-heading">
+    <div class="post-title">
+      <a href="{{'/recipes' ~ p.key().name()}}" style="color: #484848  ; text-decoration: none;">{{ p.title }}</a>
+    </div>
+
+  </div>
+
+  <div class="post-info"
+    <div class="post-picture">
+        {% if p.small_picture %}
+            <a href="/imgB?img_id={{ p.key() }}">  <img src=/img?img_id={{ p.key() }}> </a>
+        {% endif %}
+    </div>
+{#      <div class="post-content">#}
+{#        {{p._render_text | safe}}#}
+{#      </div>#}
+
+  </div>
+</div>

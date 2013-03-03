@@ -1,0 +1,196 @@
+body {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
+    position: relative;
+    font-size: 14px;
+
+    width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    color: #333;
+}
+
+.login-area {
+    font-size: 13px;
+    color: gray;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.links-area {
+    font-size: 16px;
+    color: gray;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+}
+.edit-view{
+    font-size: 16px;
+    color: gray;
+}
+.edit-history-area {
+    font-size: 13px;
+    color: gray;
+    position: absolute;
+    top: 40px;
+    right: 10px;
+}
+.edit-link {
+    color: gray;
+    text-decoration: none;
+    position: relative;
+}
+
+.login-link {
+    color: gray;
+    text-decoration: none;
+}
+
+.login-link:visited {
+    color: gray;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.error {
+    color: red;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+}
+
+label + label {
+    margin-top: 20px;
+}
+
+input[type=text] {
+    width: 500px;
+    font-size: 20px;
+    padding: 2px;
+    border: 3px solid #cccccc;
+    font-family: monospace;
+}
+input[type=password] {
+    width: 500px;
+    font-size: 20px;
+    padding: 2px;
+    border: 3px solid #cccccc;
+    font-family: monospace;
+}
+
+/*textarea#styled {*/
+    /*width: 600px;*/
+    /*height: 120px;*/
+    /*border: 3px solid #cccccc;*/
+    /*padding: 5px;*/
+    /*font-family: Tahoma, sans-serif;*/
+
+/*}*/
+textarea {
+    width: 700px;
+    height: 200px;
+    font-size: 17px;
+    font-family: monospace;
+    border: 3px solid #cccccc;
+    /*padding: 5px;*/
+}
+
+input[type=submit] {
+  font-size: 24px;
+}
+
+.main-title {
+    display: block;
+    color: #222;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+
+
+
+
+.post{
+    width: 800px;
+    margin: 0 auto;
+    color: #999;
+    text-decoration: none;
+}
+
+.post + .post {
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.post-heading {
+    position: relative;
+    border-bottom: 3px solid #666;
+    text-decoration: none;
+}
+
+.post-title {
+    color: gray;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.post-title:visited {
+    color: #999;
+}
+
+.post-title:hover {
+    text-decoration: underline;
+}
+
+
+.post-date {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: #999;
+
+}
+
+
+.post-content {
+    margin-top: 5px;
+    float: left;
+}
+
+.post-picture{
+    position: relative;
+    right: 0px;
+    /*margin-left: 0px;*/
+    /*float: right;*/
+    /*margin-bottom: 5px;*/
+
+
+}
+
+.comment {
+    width: 800px;
+    margin: 0 auto;
+    text-decoration: none;
+    margin-top: 20px;
+
+}
+
+div#footer {
+    clear: both;
+    color: #777;
+    margin: 0 auto;
+    padding: 20px 0 40px;
+    text-align: center;
+}

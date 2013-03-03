@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block head_content %}
+<link rel="stylesheet" type="text/css" href="static/zocial.css" />
+<link href='http://fonts.googleapis.com/css?family=Pompiere' rel='stylesheet' type='text/css'>
+
+
+{% endblock %}
+
+{% block content %}
+
+{#    <div id="fb-root"></div>#}
+{#    <script>(function(d, s, id) {#}
+{#        var js, fjs = d.getElementsByTagName(s)[0];#}
+{#        if (d.getElementById(id)) return;#}
+{#        js = d.createElement(s); js.id = id;#}
+{#        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=544268662274383";#}
+{#        fjs.parentNode.insertBefore(js, fjs);#}
+{#    }(document, 'script', 'facebook-jssdk'));</script>#}
+
+
+    <h2>Login</h2>
+
+{#    <div class="fb-login-button" data-show-faces="true" data-width="200" data-max-rows="1"></div>#}
+
+
+    <form method="post">
+      <table>
+        <tr>
+          <td class="label">
+            Username
+          </td>
+          <td>
+            <input type="text" name="username" value="{{username}}">
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label">
+            Password
+          </td>
+          <td>
+            <input type="password" name="password" value="">
+          </td>
+        </tr>
+      </table>
+
+      <div class="error">
+        {{error}}
+      </div>
+      <input type="hidden" name="next_url" value={{ next_url }}>
+      <input type="submit" value="Log In">
+      <div >
+          Don't have an account <a href="/signup">Signup</a>
+      </div>
+    </form>
+
+    <br><br>
+    <a href={{ google_login_link }} class="zocial googleplus">Sign in with Google+</a>
+
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-25061452-1']);
+        _gaq.push(['_setDomainName', 'smcllns.com']);
+        _gaq.push(['_setAllowHash', 'false']);
+        _gaq.push(['_trackPageview']);
+        _gaq.push(['_trackPageLoadTime']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+{% endblock %}

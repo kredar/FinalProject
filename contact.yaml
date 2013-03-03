@@ -1,0 +1,18 @@
+---
+sender_name: 'Artiom Kreimer'
+sender_email: 'kreimer.artiom@gmail.com'
+receiver_name: 'Artiom Kreimer'
+receiver_email: 'kreimer.artiom@gmail.com'
+subject_line: 'Somebody contacted you via MaCreations'
+message_body: |
+  %s contacted you via MaCreations
+
+  Name: %s
+  Email: %s
+  Subject: %s
+  Message:
+
+  %s
+
+  --
+  Contact form
