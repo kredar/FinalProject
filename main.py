@@ -299,15 +299,15 @@ class PostPage(BasicHandler):
 
 
 class NewPost(BasicHandler):
-#TODO: ONly admin can edit, post, delete Blog posts
+
     def get(self):
-        if self.userLogedIn():
+        if self.isUserAdmin():
             self.render("newpost.html")
         else:
             self.redirect("/login")
 
     def post(self):
-        if not self.userLogedIn():
+        if not self.isUserAdmin():
             self.redirect('/blog')
 
         subject = self.request.get('subject')
