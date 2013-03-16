@@ -20,6 +20,8 @@ from google.appengine.api import mail
 #from google.appengine.ext import blobstore
 from google.appengine.api import images
 from google.appengine.api import users
+from google.appengine.ext.webapp import blobstore_handlers
+
 
 from models import *
 from defines import *
@@ -111,10 +113,8 @@ def valid_email(email):
     return not email or EMAIL_RE.match(email)
 
 
-#This Class Provides Basic
 class BasicHandler(webapp2.RequestHandler):
 
-    #current_user = None;
 
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
@@ -191,6 +191,12 @@ class BasicHandler(webapp2.RequestHandler):
         else:
             return 1
     def isUserAdmin(self):
+
+        """
+        Checks if user is admin
+
+        :return: True - user is Admin, else return False
+        """
         if self.userLogedIn():
             if self.userType() == 0:
                 if self.user.name == 'admin':
@@ -495,13 +501,23 @@ class Welcome(BasicHandler):
     def get(self):
         self.render('welcome.html')
 
-class RecipesList(BasicHandler):
+
+class AllRecipesPage(BasicHandler):
+    def get(self):
+        self.render('all_recipes.html', isLogedIn = self.userLogedIn() )
 
 
+
+class MyRecipesList(BasicHandler):
     def get(self):
         #if self.user:
         #recipes=db.GqlQuery("SELECT * FROM Recipe ORDER BY DESC LIMIT 10")
+        """
+            
+
+        """
         recipes = Recipe.all().order('-created')
+
             #logging.error(page_name)
 
         if recipes:
@@ -513,7 +529,113 @@ class RecipesList(BasicHandler):
 
         #else:
         #    self.redirect('/login')
-from google.appengine.ext.webapp import blobstore_handlers
+
+class YourRecipesList(BasicHandler):
+    def get(self):
+        #if self.user:
+        #recipes=db.GqlQuery("SELECT * FROM Recipe ORDER BY DESC LIMIT 10")
+        recipes = Recipe.all().order('-created')
+
+        #logging.error(page_name)
+
+        if recipes:
+        #self.render("edit_recipe.html", page_name = page_name, content=p.content, s = self)
+            self.render('recipes.html', recipes = recipes)
+            #else:
+            #    self.render("edit_recipe.html", page_name = page_name, content="", s = self )
+            # q_time = quered_time)
+
+            #else:
+
+
+class AddRecipe(BasicHandler):
+    def get(self):
+        #page_name_l=page_name
+        if self.userLogedIn():
+            #p=Recipe.get_by_key_name(page_name)
+            #img_url= blobstoreService.createUploadUrl("/recipes/_edit%s" %page_name)
+            #upload_url = blobstore.create_upload_url('/upload')
+            #logging.error("Upload URL %s" % upload_url)
+            #if p:
+            #    self.render("edit_recipe.html", content=p.content, s = self, title = p.title, categories = recipe_categories)
+            #else:
+            self.render("edit_recipe.html", newrecipe = True, content="", s = self, categories = recipe_categories )
+
+        else:
+            self.redirect('/login')
+
+    def post(self):
+        #self.redirect('/')
+        error = None
+        if not self.userLogedIn():
+            self.redirect('/login')
+
+        #subject = self.request.get('subject')
+        #pagename = self.request.get('pagename')
+        content = self.request.get('content')
+        title= self.request.get('title')
+        category = self.request.get('category')
+        logging.error("Page title %s" % title)
+        pagename = "/" + title.replace(" ", "")
+        logging.error("Page name %s" % pagename)
+        regex = re.compile(r'/([a-zA-Z0-9_-]+)$', re.UNICODE)
+        r = regex.search(pagename)
+
+        if r is None:
+            error = "Recipe title should include only letters and digits"
+                #self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
+                #logging.error("r.group(1) %s" %r.group(1))
+        elif ( self.isUserAdmin() and Recipe.get_by_key_name(pagename)):
+        #     p=Recipe.get_by_key_name(pagename)
+        #     if p:
+            error = "This recipe page already exist, please use other name"
+        #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
+        #
+        elif ( not self.isUserAdmin() and YourRecipe.get_by_key_name(pagename)):
+        #     p=Recipe.get_by_key_name(pagename)
+        #     if p:
+            error = "This recipe page already exist, please use other name"
+        #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
+        #
+        elif content and title and error == None:
+            #p=Recipe.get_by_key_name(page_name)
+            #if p:
+            #    p.content=content
+            #    p.title=title
+            #else:
+            if (self.isUserAdmin()):
+                p = Recipe(key_name = pagename, owner = str(self.get_user_name()), content = content, title = title, recipe_name = title , category = category)
+            else:
+                p = YourRecipe(key_name = pagename, owner = str(self.get_user_name()), content = content, title = title, recipe_name = title , category = category)
+            #photo = self.request.get('img')
+            # 'file' is file upload field in the form
+            #blob_info = upload_files[0]
+            #blob_info = upload_files[0]
+            #self.redirect('/serve/%s' % blob_info.key())
+
+            #p.photo = db.Blob(photo)
+
+            #h = History(page_name = page_name, content = content)
+            p.put()
+            #h.put()
+            page_link='/recipes%s' % pagename
+            # logging.error(page_name)
+            self.redirect(str(page_link))
+            #self.redirect('/serve/%s' % blob_info.key())
+            #self.redirect('/?' + urllib.urlencode(
+            #    {'guestbook_name': guestbook_name}))
+        elif not content:
+            error = "Recipe content, please!"
+            #self.render("newpost.html", subject=subject, content=content, error=error)
+            #self.render("edit_recipe.html", title = title, content="", s = self, categories = recipe_categories , error=error)
+        elif not title:
+            error = "Recipe title, please!"
+            #self.render("newpost.html", subject=subject, content=content, error=error)
+            #self.render("edit_recipe.html", content=content, s = self, categories = recipe_categories , error=error)
+            #upload_files = self.get_uploads('img')
+        if error:
+            self.render("edit_recipe.html", content=content, s = self, categories = recipe_categories , error=error)
+
 
 class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
 
@@ -833,15 +955,12 @@ class ImageB(webapp2.RequestHandler):
             #self.response.headers['Content-Type'] = 'image/png'
             #self.response.out.write(page.small_picture)
 
-class Rate(BasicHandler):
-    def get(self):
-        self.render('rating.html')
 
 class Tools(BasicHandler):
     def get(self):
         self.render('tools.html')
 
-PAGE_RE = r'(/(?:[a-zA-Z0-9_-]+/?)*)' # From Udacityr'(/(?:[a-zA-Z0-9_-]+/?)*)'
+
 app = webapp2.WSGIApplication([('/img', Image),
                                ('/imgB', ImageB),
                                ('/imgAv', ImageAv),
@@ -852,11 +971,14 @@ app = webapp2.WSGIApplication([('/img', Image),
                                ('/login', Login),
                                ('/logout', Logout),
                               # ('/serve/([^/]+)?', ServeHandler),
+                              ('/my_recipes',MyRecipesList),
+                              ('/your_recipes',YourRecipesList),
                                ('/recipes/_upload', UploadPage),
+                               ('/recipes/addrecipe', AddRecipe),
                                ('/recipes/_edit' + PAGE_RE, EditRecipe),
                                ('/recipes' + PAGE_RE, RecipePage),
                                ('/gallery', Gallery),
-                               ('/recipes', RecipesList),
+                               ('/recipes', AllRecipesPage),
                                ('/about', About),
                                ('/contact', ContactUs),
                                ('/blog/?', BlogFront),

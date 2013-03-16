@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="content"><h2>Recipe:</h2>
-       {{page.render() | safe}}
+       {{page.render(False) | safe}}
 
           <div class="post-content">
             {{page._render_text | safe}}

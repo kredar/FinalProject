@@ -2,7 +2,6 @@ __author__ = 'Artiom'
 
 import logging
 
-from tools import *
 from google.appengine.ext import db
 from google.appengine.api import memcache
 
@@ -27,20 +26,27 @@ def calcAverageRating(ratings):
 
 
 
+
 def ratingsForRecipe(recipe_name, update = False):
     '''
     Memcache for ratings
     '''
     key = recipe_name
-    rating=memcache.get(key)
+    rating = memcache.get(key)
     if rating is None or update:
         ratings = db.GqlQuery("SELECT * FROM Rating WHERE recipe_name = :1" , recipe_name)
         averageRating = calcAverageRating(ratings)
         memcache.set(key, averageRating)
     return rating
 
+
 def getRating(recipe_name):
 
+    """
+
+    :param recipe_name:
+    :return:
+    """
     rating = ratingsForRecipe(recipe_name)
     if rating:
         return rating

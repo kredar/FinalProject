@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Editing recipe: <i>{{ title }}</i> </h2>
-
+    {% if newrecipe %}
+        <h2>New recipe: <i>{{ title }}</i> </h2>
+    {% else %}
+        <h2>Editing recipe: <i>{{ title }}</i> </h2>
+    {% endif %}
     <form method="post">
 
-
-{#            <div>Recipe Ingredients</div>#}
             <label>title:</label>
             <input type="text" name="title" value="{{title}}">
             <label for="Category">category:</label>
