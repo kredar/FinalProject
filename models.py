@@ -40,6 +40,12 @@ def permalink_post(key, update=False):
 
 
 def edit_post(post_id, subject, content):
+    """
+
+    :param post_id:
+    :param subject:
+    :param content:
+    """
     db_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
     post = db.get(db_key)
     post.subject = subject
@@ -48,6 +54,21 @@ def edit_post(post_id, subject, content):
     top_posts(True)
     permalink_post(post_id, True)
 
+
+def remove_post(post_id):
+    """
+        Removes
+    :param post_id:
+    :return:
+    """
+    #TODO: create 404 page
+    db_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+    post = db.get(db_key)
+    # if not post:
+    #     BasicHandler.error(404)
+    #     return
+    post.delete()
+    top_posts(True)
 
 
 

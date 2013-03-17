@@ -314,16 +314,7 @@ class EditPostPage(BasicHandler):
 class RemovePostPage(BasicHandler):
     def get(self,post_id):
         if self.isUserAdmin():
-            db_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-            post = db.get(db_key)
-            #post = permalink_post(post_id)#db.get(key)
-            #post = perm_post_time[0]
-            #last_acc_time = int (time.time() - perm_post_time[1])
-            if not post:
-                self.error(404)
-                return
-            post.delete()
-            top_posts(True)
+            remove_post(post_id)
             self.redirect('/blog')
         else:
             self.redirect("/login")
