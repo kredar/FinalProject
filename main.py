@@ -27,6 +27,7 @@ from models import *
 from defines import *
 from tools import *
 from rating import *
+from recipe_db import *
 
 
 #template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -452,34 +453,24 @@ class AllRecipesPage(BasicHandler):
 
 class MyRecipesList(BasicHandler):
     def get(self):
-        #if self.user:
-        #recipes=db.GqlQuery("SELECT * FROM Recipe ORDER BY DESC LIMIT 10")
         """
             
 
         """
-        recipes = Recipe.all().order('-created')
-
-            #logging.error(page_name)
-
+        recipes = top_recipes()
         if recipes:
-                #self.render("edit_recipe.html", page_name = page_name, content=p.content, s = self)
             self.render('recipes.html', recipes = recipes)
-            #else:
-            #    self.render("edit_recipe.html", page_name = page_name, content="", s = self )
-            # q_time = quered_time)
 
-        #else:
-        #    self.redirect('/login')
+        else:
+            self.redirect('/Welcome')
 
 class YourRecipesList(BasicHandler):
     def get(self):
-        #if self.user:
-        #recipes=db.GqlQuery("SELECT * FROM Recipe ORDER BY DESC LIMIT 10")
+        """
+
+
+        """
         recipes = Recipe.all().order('-created')
-
-        #logging.error(page_name)
-
         if recipes:
         #self.render("edit_recipe.html", page_name = page_name, content=p.content, s = self)
             self.render('recipes.html', recipes = recipes)
