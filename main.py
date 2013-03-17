@@ -635,6 +635,7 @@ class RecipePage(BasicHandler):
             else:
                 self.redirect(edit_link)
 
+
     def post(self, page_name):
         rating = self.request.get('rating')
         if self.userLogedIn():
