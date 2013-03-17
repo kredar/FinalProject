@@ -2,6 +2,24 @@
 
 from tools import *
 from google.appengine.ext import db
+from google.appengine.api import memcache
+
+
+def top_posts(update = False):
+    """
+        Getting last 10 posts from memchace
+
+    :param update: if True memcache will be updated
+    :return: return 10 last blog post
+    """
+    key = 'top'
+    posts = memcache.get(key)
+    if posts is None or update:
+        posts = Post.all().order('-created')
+        posts = list(posts)
+        memcache.set(key, posts)
+    return posts
+
 
 
 class Recipe(db.Model):

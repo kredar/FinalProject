@@ -76,20 +76,6 @@ def users_key(group = 'default'):
 def blog_key(name = 'default'):
     return db.Key.from_path('blogs', name)
 
-def top_posts(update = False):
-    key='top'
-    global last_queried_time
-    posts=memcache.get(key)
-    if posts is None or update:
-        # logging.error("DB QUERRY")
-        #add logging of querry to DB
-        posts = Post.all().order('-created')
-        posts = list(posts)
-        last_queried_time = time.time()
-        memcache.set(key, posts)
-    return posts , last_queried_time
-
-
 
 
 def permalink_post(key):
@@ -134,7 +120,6 @@ class BasicHandler(webapp2.RequestHandler):
         self.response.headers.add_header(
             'Set-Cookie',
             '%s=%s; Path=/' % (name, cookie_val))
-        logging.error('Coockie should be set %s %s' % (name, cookie_val) )
 
     def read_secure_cookie(self, name):
         cookie_val = self.request.cookies.get(name)
@@ -249,13 +234,12 @@ class User(db.Model):
 
 class BlogFront(BasicHandler):
     def get(self):
-        #posts = Post.all().order('-created')
+        """
 
-        get_posts_and_time = top_posts()
-        posts = get_posts_and_time[0]
-        l_time = get_posts_and_time [1]
-        quered_time = int(time.time() - l_time)
-        self.render('front.html', posts = posts, q_time = quered_time)
+
+        """
+        posts =  top_posts()
+        self.render('front.html', posts = posts)
 
 
 
@@ -265,17 +249,13 @@ class BlogFront(BasicHandler):
 class PostPage(BasicHandler):
 
     def get(self, post_id):
-        #key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = permalink_post(post_id)#db.get(key)
-        # = perm_post_time[0]
-        #last_acc_time = int (time.time() - perm_post_time[1])
         if not post:
             self.error(404)
             return
         comments = db.GqlQuery("SELECT * FROM Comment WHERE post_id = :1 ORDER BY created DESC LIMIT 10", post_id)
+
         self.render("permalink.html", post = post , comments = comments)#, q_time = last_acc_time )
-    # def post(self):
-    #     self.render("permalink.html", post = post)
 
     def post(self, post_id):
         comment = self.request.get('comment')
