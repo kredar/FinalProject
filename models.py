@@ -39,6 +39,27 @@ def permalink_post(key):
     return post
 
 
+def get_comments_for_post(post_id):
+    """
+
+    :param post_id:
+    :return:
+    """
+    comments = db.GqlQuery("SELECT * FROM Comment WHERE post_id = :1 ORDER BY created DESC LIMIT 10", post_id)
+    return comments
+
+
+def add_comment_for_post(post_id, submitter, comment):
+    """
+
+    :param post_id:
+    :param submitter:
+    :param comment:
+    """
+    com = Comment(post_id=post_id, submitter=submitter, comment=comment)
+    com.put()
+
+
 class Recipe(db.Model):
     owner = db.StringProperty(required=True)
     #recipe_name = db.StringProperty(required = True)

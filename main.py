@@ -68,6 +68,11 @@ def valid_pw(name, password, h):
     return h == make_pw_hash(name, password, salt)
 
 def users_key(group = 'default'):
+    """
+
+    :param group:
+    :return:
+    """
     return db.Key.from_path('users', group)
 
 def valid_username(username):
@@ -233,8 +238,7 @@ class PostPage(BasicHandler):
         if not post:
             self.error(404)
             return
-        comments = db.GqlQuery("SELECT * FROM Comment WHERE post_id = :1 ORDER BY created DESC LIMIT 10", post_id)
-
+        comments = get_comments_for_post(post_id)
         self.render("permalink.html", post = post , comments = comments)#, q_time = last_acc_time )
 
     def post(self, post_id):
@@ -243,14 +247,7 @@ class PostPage(BasicHandler):
         if self.userLogedIn():
             if comment:
                 if self.get_current_username():
-                    #submitter = current_user.name
-                    com = Comment(post_id = post_id, submitter = self.get_current_username(), comment = comment)
-                    com.put()
-                # p.put()
-                # top_posts(True)
-
-                # self.redirect('/blog/%s' % str(p.key().id()))
-
+                    add_comment_for_post(post_id, self.get_current_username(), comment)
                     self.redirect("/blog/%s" %post_id)
                 else:
                     self.write("No user")
