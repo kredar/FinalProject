@@ -25,18 +25,31 @@ def top_posts(update=False):
     return posts
 
 
-def permalink_post(key):
+def permalink_post(key, update=False):
     """
 
     :param key: blog ID
     :return: return post with given key
     """
     post = memcache.get(key)
-    if post is None:
+    if post is None or update:
         db_key = db.Key.from_path('Post', int(key), parent=blog_key())
         post = db.get(db_key)
         memcache.set(key, post)
     return post
+
+
+def edit_post(post_id, subject, content):
+    db_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+    post = db.get(db_key)
+    post.subject = subject
+    post.content = content
+    post.put()
+    top_posts(True)
+    permalink_post(post_id, True)
+
+
+
 
 
 def get_comments_for_post(post_id):

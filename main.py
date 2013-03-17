@@ -281,19 +281,21 @@ class NewPost(BasicHandler):
             error = "subject and content, please!"
             self.render("newpost.html", subject=subject, content=content, error=error)
 
+
 class EditPostPage(BasicHandler):
+
+
     def get(self,post_id):
-#TODO: replace self.user.name with self.current_user_name()
         if self.isUserAdmin():
-            post = permalink_post(post_id)#db.get(key)
-            #post = perm_post_time[0]
-            #last_acc_time = int (time.time() - perm_post_time[1])
+            post = permalink_post(post_id)
             if not post:
                 self.error(404)
                 return
             self.render("newpost.html", subject = post.subject, content = post.content)
         else:
             self.redirect("/login")
+
+
     def post(self, post_id):
         if not self.userLogedIn():
             self.redirect('/blog')
@@ -302,16 +304,8 @@ class EditPostPage(BasicHandler):
         content = self.request.get('content')
 
         if subject and content:
-            db_key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-            post = db.get(db_key)
-            post.subject = subject
-            post.content = content
-            #p = Post(parent = blog_key(), subject = subject, content = content)
-            post.put()
-            top_posts(True)
-
-            self.redirect('/blog/%s' % str(post.key().id()))
-
+            edit_post(post_id, subject, content)
+            self.redirect('/blog/%s' % post_id)
         else:
             error = "subject and content, please!"
             self.render("newpost.html", subject=subject, content=content, error=error)
