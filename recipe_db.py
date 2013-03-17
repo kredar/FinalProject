@@ -15,6 +15,17 @@ def top_recipes(update=False):
     return recipes
 
 
+def get_recipe_by_name(recipe_name):
+    """
+
+    :param recipe_name:
+    :return:
+    """
+    p = Recipe.get_by_key_name(recipe_name)
+    return p
+
+
+
 class Recipe(db.Model):
     owner = db.StringProperty(required=True)
     #recipe_name = db.StringProperty(required = True)

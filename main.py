@@ -483,28 +483,16 @@ class YourRecipesList(BasicHandler):
 
 class AddRecipe(BasicHandler):
     def get(self):
-        #page_name_l=page_name
         if self.userLogedIn():
-            #p=Recipe.get_by_key_name(page_name)
-            #img_url= blobstoreService.createUploadUrl("/recipes/_edit%s" %page_name)
-            #upload_url = blobstore.create_upload_url('/upload')
-            #logging.error("Upload URL %s" % upload_url)
-            #if p:
-            #    self.render("edit_recipe.html", content=p.content, s = self, title = p.title, categories = recipe_categories)
-            #else:
             self.render("edit_recipe.html", newrecipe = True, content="", s = self, categories = recipe_categories )
-
         else:
             self.redirect('/login')
 
     def post(self):
-        #self.redirect('/')
         error = None
         if not self.userLogedIn():
             self.redirect('/login')
 
-        #subject = self.request.get('subject')
-        #pagename = self.request.get('pagename')
         content = self.request.get('content')
         title= self.request.get('title')
         category = self.request.get('category')
@@ -516,8 +504,6 @@ class AddRecipe(BasicHandler):
 
         if r is None:
             error = "Recipe title should include only letters and digits"
-                #self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
-                #logging.error("r.group(1) %s" %r.group(1))
         elif ( self.isUserAdmin() and Recipe.get_by_key_name(pagename)):
         #     p=Recipe.get_by_key_name(pagename)
         #     if p:
@@ -637,25 +623,15 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
 class RecipePage(BasicHandler):
 
     def get(self, page_name):
-        #self.write("Have a nice day %s" %page_name)
         edit_link="/recipes/_edit%s" % page_name
-        #history_link="/_history%s" % page_name
 
         if page_name:
-            #db_page = db.Key.from_path('Post', int(key), parent=blog_key())
-            #db_pages = db.GqlQuery("SELECT * FROM Recipe WHERE name = :1 ", page_name)
-            p=Recipe.get_by_key_name(page_name)
+            p = get_recipe_by_name(page_name)
             rating = getRating(page_name)
             rating = getRating(page_name)
 
             if p:
-                #self.render('base_recipe.html', page_name = page_name, p = p)
-                #b_key = BlobKey(p.picture)
-                #self.redirect('/serve/%s' % b_key)
-                #self.response.out.write('<div><img src="img?img_id=%s"></img>' % p.key())
-                # logging.error("Image %s " % p.small_picture)
                 self.render("singleRecipe.html", page = p , edit_link = edit_link, s = self, rating = rating)
-                #self.response.out.write("""<img src="image?img_id=%s"></img>""" % p.key())
             else:
                 self.redirect(edit_link)
 
@@ -666,7 +642,6 @@ class RecipePage(BasicHandler):
                 ratings = Rating.all()
                 ratings.filter('submitter =' , self.get_current_username())
                 ratings.filter('recipe_name =' , page_name)
-                #rate = db.GqlQuery("SELECT * FROM Rating WHERE recipe_name = :1 AND submitter = :2" , page_name, self.current_user)
                 updated = False
                 if ratings:
                     logging.error("got ratings")
