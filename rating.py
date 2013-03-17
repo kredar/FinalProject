@@ -24,9 +24,6 @@ def calcAverageRating(ratings):
         return None
 
 
-
-
-
 def ratingsForRecipe(recipe_name, update = False):
     '''
     Memcache for ratings
@@ -38,6 +35,25 @@ def ratingsForRecipe(recipe_name, update = False):
         averageRating = calcAverageRating(ratings)
         memcache.set(key, averageRating)
     return rating
+
+
+def update_rating(recipe_name, submitter, rating_value):
+    ratings = Rating.all()
+    ratings.filter('submitter =', submitter)
+    ratings.filter('recipe_name =', recipe_name)
+    updated = False
+    if ratings:
+        logging.error("got ratings")
+        for rate in ratings:
+            if rate.submitter == submitter:
+                rate.rating = rating_value
+                rate.put()
+                updated = True
+    if not updated:
+        rate = Rating(submitter = submitter, rating = rating_value, recipe_name = recipe_name)
+        rate.put()
+        ratingsForRecipe(recipe_name, True)
+    return True
 
 
 def getRating(recipe_name):

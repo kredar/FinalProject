@@ -639,25 +639,8 @@ class RecipePage(BasicHandler):
         rating = self.request.get('rating')
         if self.userLogedIn():
             if rating:
-                ratings = Rating.all()
-                ratings.filter('submitter =' , self.get_current_username())
-                ratings.filter('recipe_name =' , page_name)
-                updated = False
-                if ratings:
-                    logging.error("got ratings")
-                    for rate in ratings:
-                        if rate.submitter == self.get_current_username():
-                            rate.rating = rating
-                            rate.put()
-                            updated = True
-                            logging.error("rate updated")
-                            self.redirect('/recipes%s' %page_name)
-                if not updated:
-                    logging.error("Submitter%s", self.get_current_username())
-                    rate = Rating(submitter = str(self.get_current_username()), rating = rating, recipe_name = page_name)
-                    rate.put()
-                    ratingsForRecipe(page_name, True)
-                    self.redirect('/recipes%s' %page_name)
+                update_rating(page_name, self.get_current_username(), rating)
+                self.redirect('/recipes%s' %page_name)
         else:
             self.redirect('/login')
 
