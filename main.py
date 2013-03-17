@@ -70,26 +70,6 @@ def valid_pw(name, password, h):
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
 
-
-
-
-def blog_key(name = 'default'):
-    return db.Key.from_path('blogs', name)
-
-
-
-def permalink_post(key):
-    #global last_queried_time
-    post=memcache.get(key)
-    if post is None or key not in permalink_access_time:
-        # logging.error("Permalink DB QUERRY")
-        #add logging of querry to DB
-        db_key = db.Key.from_path('Post', int(key), parent=blog_key())
-        post = db.get(db_key)
-        #permalink_access_time[key] = time.time()
-        memcache.set(key, post)
-    return post #, permalink_access_time[key]
-
 def valid_username(username):
     return username and USER_RE.match(username)
 def valid_password(password):

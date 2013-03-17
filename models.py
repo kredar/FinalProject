@@ -5,7 +5,11 @@ from google.appengine.ext import db
 from google.appengine.api import memcache
 
 
-def top_posts(update = False):
+def blog_key(name='default'):
+    return db.Key.from_path('blogs', name)
+
+
+def top_posts(update=False):
     """
         Getting last 10 posts from memchace
 
@@ -20,6 +24,19 @@ def top_posts(update = False):
         memcache.set(key, posts)
     return posts
 
+
+def permalink_post(key):
+    """
+
+    :param key: blog ID
+    :return: return post with given key
+    """
+    post = memcache.get(key)
+    if post is None:
+        db_key = db.Key.from_path('Post', int(key), parent=blog_key())
+        post = db.get(db_key)
+        memcache.set(key, post)
+    return post
 
 
 class Recipe(db.Model):
