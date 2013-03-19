@@ -470,15 +470,8 @@ class YourRecipesList(BasicHandler):
 
 
         """
-        recipes = Recipe.all().order('-created')
-        if recipes:
-        #self.render("edit_recipe.html", page_name = page_name, content=p.content, s = self)
-            self.render('recipes.html', recipes = recipes)
-            #else:
-            #    self.render("edit_recipe.html", page_name = page_name, content="", s = self )
-            # q_time = quered_time)
+        self.render("underconstruction.html")
 
-            #else:
 
 
 class AddRecipe(BasicHandler):
@@ -627,10 +620,11 @@ class RecipePage(BasicHandler):
 
         if page_name:
             p = get_recipe_by_name(page_name)
-            rating = getRating(page_name)
-            rating = getRating(page_name)
+
 
             if p:
+                rating = getRating(page_name)
+                #rating = getRating(page_name)
                 self.render("singleRecipe.html", page = p , edit_link = edit_link, s = self, rating = rating)
             else:
                 self.redirect(edit_link)

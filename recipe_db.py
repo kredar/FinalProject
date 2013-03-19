@@ -15,6 +15,15 @@ def top_recipes(update=False):
     return recipes
 
 
+def get_recipe_key(recipe_name):
+    """
+
+    :param recipe_name:
+    :return: key for given recipe name
+    """
+    key = Recipe.get_by_key_name(recipe_name).key()
+    return key
+
 def get_recipe_by_name(recipe_name):
     """
 
@@ -22,8 +31,8 @@ def get_recipe_by_name(recipe_name):
     :return:
     """
     p = Recipe.get_by_key_name(recipe_name)
-    return p
 
+    return p
 
 
 class Recipe(db.Model):
