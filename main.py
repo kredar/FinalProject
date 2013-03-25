@@ -624,7 +624,7 @@ class RecipePage(BasicHandler):
 
             if p:
                 rating = getRating(page_name)
-                #rating = getRating(page_name)
+                rating = getRating(page_name)
                 self.render("singleRecipe.html", page = p , edit_link = edit_link, s = self, rating = rating)
             else:
                 self.redirect(edit_link)
