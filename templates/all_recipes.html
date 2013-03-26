@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="recipes">
+
+        {% if isLogedIn %}
+            <a  href={{ "/recipes/addrecipe" }}>add new recipe</a>
+        {% endif %}
+
+        <div class="my_recipes">
+
+            <a  href={{ "/my_recipes" }}><h2>My recipes</h2></a>
+        </div>
+
+        <div class="my_recipes">
+            <a  href={{ "/your_recipes" }}><h2>Your recipes</h2></a>
+        </div>
+
+
+    </div>
+
+{% endblock %}
