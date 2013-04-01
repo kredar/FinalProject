@@ -1,7 +1,7 @@
 __author__ = 'Artiom'
 
 from tools import *
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from google.appengine.api import memcache
 
 
@@ -9,7 +9,7 @@ def top_recipes(update=False):
     key = 'top_recipes'
     recipes = memcache.get(key)
     if recipes is None or update:
-        recipes = Recipe.all().order('-created')
+        recipes = Recipe.query().order('-created')
         recipes = list(recipes)
         memcache.set(key, recipes)
     return recipes
@@ -21,7 +21,7 @@ def get_recipe_key(recipe_name):
     :param recipe_name:
     :return: key for given recipe name
     """
-    key = Recipe.get_by_key_name(recipe_name).key()
+    key = Recipe.get_by_id(recipe_name).key()
     return key
 
 def get_recipe_by_name(recipe_name):
@@ -30,21 +30,21 @@ def get_recipe_by_name(recipe_name):
     :param recipe_name:
     :return:
     """
-    p = Recipe.get_by_key_name(recipe_name)
+    p = Recipe.get_by_id(recipe_name)
 
     return p
 
 
-class Recipe(db.Model):
-    owner = db.StringProperty(required=True)
+class Recipe(ndb.Model):
+    owner = ndb.StringProperty(required=True)
     #recipe_name = db.StringProperty(required = True)
-    content = db.TextProperty(required=True)
-    category = db.TextProperty(required=True)
-    title = db.StringProperty()
-    created = db.DateTimeProperty(auto_now_add=True)
-    small_picture = db.BlobProperty()
-    big_picture = db.BlobProperty()
-    avatar = db.BlobProperty()
+    content = ndb.TextProperty(required=True)
+    category = ndb.TextProperty(required=True)
+    title = ndb.StringProperty()
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    small_picture = ndb.BlobProperty()
+    big_picture = ndb.BlobProperty()
+    avatar = ndb.BlobProperty()
 
     def render(self, noPictures=True):
         """
@@ -56,16 +56,16 @@ class Recipe(db.Model):
         return render_str("base_recipe.html", p=self, noPictures=noPictures)
 
 
-class YourRecipe(db.Model):
-    owner = db.StringProperty(required=True)
+class YourRecipe(ndb.Model):
+    owner = ndb.StringProperty(required=True)
     #recipe_name = db.StringProperty(required = True)
-    content = db.TextProperty(required=True)
-    category = db.TextProperty(required=True)
-    title = db.StringProperty()
-    created = db.DateTimeProperty(auto_now_add=True)
-    small_picture = db.BlobProperty()
-    big_picture = db.BlobProperty()
-    avatar = db.BlobProperty()
+    content = ndb.TextProperty(required=True)
+    category = ndb.TextProperty(required=True)
+    title = ndb.StringProperty()
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    small_picture = ndb.BlobProperty()
+    big_picture = ndb.BlobProperty()
+    avatar = ndb.BlobProperty()
 
     def render(self, noPictures=True):
         self._render_text = self.content.replace('\n', '<br>')

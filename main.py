@@ -453,7 +453,12 @@ class AllRecipesPage(BasicHandler):
 
 class MyRecipesList(BasicHandler):
     def get(self):
-        """
+        """This
+        \
+
+
+
+        
             
 
         """
@@ -744,6 +749,7 @@ class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
         # logging.error("AVATAR %s" % avatar)
         #avatar = avatar.resize(width=1024)
         avatar.resize(width=1024)
+
 
         avatar.im_feeling_lucky()
         big_pic = avatar.execute_transforms(output_encoding=images.JPEG)
