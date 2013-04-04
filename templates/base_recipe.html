@@ -9,7 +9,7 @@
   <div class="post-info"
     <div class="post-picture">
         {% if p.small_picture and noPictures == False %}
-            <a href="/imgB?img_id={{ p.key() }}">  <img src=/img?img_id={{ p.key() }}> </a>
+            <a href="/imgB?img_id={{ p.key.id() }}">  <img src=/img?img_id={{ p.key.id() }}> </a>
         {% endif %}
     </div>
 {#      <div class="post-content">#}

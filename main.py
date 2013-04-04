@@ -566,7 +566,7 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
     def get(self, page_name):
         #page_name_l=page_name
         if self.userLogedIn():
-            p=Recipe.get_by_key_name(page_name)
+            p=get_recipe_by_name(page_name)
             #img_url= blobstoreService.createUploadUrl("/recipes/_edit%s" %page_name)
             #upload_url = blobstore.create_upload_url('/upload')
             #logging.error("Upload URL %s" % upload_url)
@@ -589,13 +589,14 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
         category = self.request.get('category')
         # logging.error("Page name %s" % page_name)
         if content and title:
-            p=Recipe.get_by_key_name(page_name)
+            p=get_recipe_by_name(page_name)
             if p:
                 p.content=content
                 p.title=title
+                p.put()
             else:
-                p = Recipe(key_name = page_name  , owner = str(self.get_user_name()), content = content, title = title, recipe_name = page_name , category = category)
-
+                #p = Recipe(key_name = page_name  , owner = str(self.get_user_name()), content = content, title = title, recipe_name = page_name , category = category)
+                add_recipe(id=page_name, owner=str(self.get_user_name()), content=content, title=title, category=category)
                 #photo = self.request.get('img')
               # 'file' is file upload field in the form
             #blob_info = upload_files[0]
@@ -605,7 +606,7 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
             #p.photo = db.Blob(photo)
 
             #h = History(page_name = page_name, content = content)
-            p.put()
+
             #h.put()
             page_link='/recipes%s' % page_name
             # logging.error(page_name)
@@ -628,8 +629,11 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
 class RecipePage(BasicHandler):
 
     def get(self, page_name):
+        for i in range(1,10,1):
+            logging.error(page_name)
         edit_link="/recipes/_edit%s" % page_name
-
+        for i in range(1,10,1):
+            logging.error(edit_link)
         if page_name:
             p = get_recipe_by_name(page_name)
 
@@ -825,24 +829,27 @@ class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
         r = regex.search(next_url)
         if page_url:
             #url = str(blob_info.key())
-            recipe=Recipe.get_by_key_name(page_url.groups())
+            for i in range(1,10,1):
+                logging.error("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
+            logging.error(str(page_url.groups()[0]))
+            recipe=get_recipe_by_name(str(page_url.groups()[0]))
             # logging.error("page_name -%s-" % page_url.groups())
-            picture = Pictures(page_name = recipe[0].title)
+            picture = Pictures(page_name = recipe.title)
             picture.small_picture = db.Blob(small_pic)
             picture.big_picture = db.Blob(big_pic)
             picture.avatar =  db.Blob(avatar)
             picture.put()
 
             if recipe:
-                p=recipe[0]
+                #p=recipe[0]
                 # logging.error("page_name from DB %s" % p.recipe_name)
                 #p.picture=url
 
-                p.small_picture = db.Blob(small_pic)
-                p.big_picture = db.Blob(big_pic)
-                p.avatar =  db.Blob(avatar)
+                recipe.small_picture = db.Blob(small_pic)
+                recipe.big_picture = db.Blob(big_pic)
+                recipe.avatar =  db.Blob(avatar)
                 #logging.error("AVATAR %s" % p.small_picture)
-                p.put()
+                recipe.put()
                 self.redirect(next_url)
         else:
 
