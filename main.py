@@ -509,7 +509,7 @@ class AddRecipe(BasicHandler):
 
         if r is None:
             error = "Recipe title should include only letters and digits"
-        elif ( self.isUserAdmin() and Recipe.get_by_id(pagename)):
+        elif ( self.isUserAdmin() and get_recipe_by_name(pagename)):
         #     p=Recipe.get_by_key_name(pagename)
         #     if p:
             error = "This recipe page already exist, please use other name"
@@ -726,149 +726,72 @@ class UploadPage(BasicHandler):
         else:
             self.redirect('/login')
 
-def rescale(img_data, width, height, halign='middle', valign='middle'):
-
-    """Resize then optionally crop a given image.
-
-    Attributes:
-      img_data: The image data
-      width: The desired width
-      height: The desired height
-      halign: Acts like photoshop's 'Canvas Size' function, horizontally
-              aligning the crop to left, middle or right
-      valign: Verticallly aligns the crop to top, middle or bottom
-
-    """
-    image = img_data#images.Image(img_data)
-
-    desired_wh_ratio = float(width) / float(height)
-    wh_ratio = float(image.width) / float(image.height)
-
-    if desired_wh_ratio > wh_ratio:
-        # resize to width, then crop to height
-        image.resize(width=width)
-        image.execute_transforms()
-        trim_y = (float(image.height - height) / 2) / image.height
-        if valign == 'top':
-            image.crop(0.0, 0.0, 1.0, 1 - (2 * trim_y))
-        elif valign == 'bottom':
-            image.crop(0.0, (2 * trim_y), 1.0, 1.0)
-        else:
-            image.crop(0.0, trim_y, 1.0, 1 - trim_y)
-    else:
-        # resize to height, then crop to width
-        image.resize(height=height)
-        image.execute_transforms()
-        trim_x = (float(image.width - width) / 2) / image.width
-        if halign == 'left':
-            image.crop(0.0, 0.0, 1 - (2 * trim_x), 1.0)
-        elif halign == 'right':
-            image.crop((2 * trim_x), 0.0, 1.0, 1.0)
-        else:
-            image.crop(trim_x, 0.0, 1 - trim_x, 1.0)
-
-    return image.execute_transforms()
+# def rescale(img_data, width, height, halign='middle', valign='middle'):
+#
+#     """Resize then optionally crop a given image.
+#
+#     Attributes:
+#       img_data: The image data
+#       width: The desired width
+#       height: The desired height
+#       halign: Acts like photoshop's 'Canvas Size' function, horizontally
+#               aligning the crop to left, middle or right
+#       valign: Verticallly aligns the crop to top, middle or bottom
+#
+#     """
+#     image = img_data#images.Image(img_data)
+#
+#     desired_wh_ratio = float(width) / float(height)
+#     wh_ratio = float(image.width) / float(image.height)
+#
+#     if desired_wh_ratio > wh_ratio:
+#         # resize to width, then crop to height
+#         image.resize(width=width)
+#         image.execute_transforms()
+#         trim_y = (float(image.height - height) / 2) / image.height
+#         if valign == 'top':
+#             image.crop(0.0, 0.0, 1.0, 1 - (2 * trim_y))
+#         elif valign == 'bottom':
+#             image.crop(0.0, (2 * trim_y), 1.0, 1.0)
+#         else:
+#             image.crop(0.0, trim_y, 1.0, 1 - trim_y)
+#     else:
+#         # resize to height, then crop to width
+#         image.resize(height=height)
+#         image.execute_transforms()
+#         trim_x = (float(image.width - width) / 2) / image.width
+#         if halign == 'left':
+#             image.crop(0.0, 0.0, 1 - (2 * trim_x), 1.0)
+#         elif halign == 'right':
+#             image.crop((2 * trim_x), 0.0, 1.0, 1.0)
+#         else:
+#             image.crop(trim_x, 0.0, 1 - trim_x, 1.0)
+#
+#     return image.execute_transforms()
 
 class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
-#    def post(self):
-#        guestbook_name = self.request.get('guestbook_name')
-#        greeting = Greeting(parent=guestbook_key(guestbook_name))
-#
-#        if users.get_current_user():
-#            greeting.author = users.get_current_user().nickname()
-#
-#        greeting.content = self.request.get('content')
-#        avatar = images.Image(self.request.get('img'))
-#        avatar.resize(width=1024)
-#
-#        avatar.im_feeling_lucky()
-#        avatar = avatar.execute_transforms(output_encoding=images.JPEG)
-#        #avatar = self.request.get('img')
-#        #avatar_img=Image(avatar)
-#        #avatar_image=images.resize(avatar_img, 32, 32)
-#        greeting.avatar = db.Blob(avatar)
-#        greeting.put()
-#        self.redirect('/?' + urllib.urlencode(
-#            {'guestbook_name': guestbook_name}))
-
-
-
     def post(self):
         next_url = str(self.request.get("page_name"))
         if not next_url or next_url.startswith('/login'):
             next_url='/'
-        # logging.error("Next URL %s" % next_url)
-        #upload_files = self.get_uploads('img')
-        avatar = images.Image(self.request.get('img'))  # 'file' is file upload field in the form
-        #blob_info = upload_files[0]
-        # logging.error("AVATAR %s" % avatar)
-        #avatar = avatar.resize(width=1024)
-        avatar.resize(width=1024)
-
-
-        avatar.im_feeling_lucky()
-        big_pic = avatar.execute_transforms(output_encoding=images.JPEG)
-        avatar.resize(500,400)
-        small_pic = avatar.execute_transforms(output_encoding=images.JPEG)
-        #avatar.resize(75, 75)
-
-        #avatar = avatar.execute_transforms(output_encoding=images.JPEG)
-        avatar = rescale(img_data=avatar, width=75,height=75)
-        # logging.error("AVATAR %s" % avatar)
-
-        #avatar = avatar.execute_transforms(output_encoding=images.JPEG)
-        #avatar = self.request.get('img')
-        #avatar_img=Image(avatar)
-        #avatar_image=images.resize(avatar_img, 32, 32)
-
-
-        #logging.error("BLOB %s" % self.send_blob(blobstore.BlobInfo.get(blob_info.key())))
-        PAGE_NAME_RE = r'recipes(/(?:[a-zA-Z0-9_-]+/?)*)'
+        image = images.Image(self.request.get('img'))  # 'file' is file upload field in the form
         page_url=re.search('recipes(/(?:[a-zA-Z0-9_-]+/?)*)', next_url)
         regex = re.compile("recipes(/(?:[a-zA-Z0-9_-]+/?)*)")
         r = regex.search(next_url)
         if page_url:
-            #url = str(blob_info.key())
-            for i in range(1,10,1):
-                logging.error("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
-            logging.error(str(page_url.groups()[0]))
             recipe=get_recipe_by_name(str(page_url.groups()[0]))
-            # logging.error("page_name -%s-" % page_url.groups())
-            picture = Pictures(page_name = recipe.title)
-            picture.small_picture = db.Blob(small_pic)
-            picture.big_picture = db.Blob(big_pic)
-            picture.avatar =  db.Blob(avatar)
-            picture.put()
-
             if recipe:
-                #p=recipe[0]
-                # logging.error("page_name from DB %s" % p.recipe_name)
-                #p.picture=url
-
-                recipe.small_picture = db.Blob(small_pic)
-                recipe.big_picture = db.Blob(big_pic)
-                recipe.avatar =  db.Blob(avatar)
-                #logging.error("AVATAR %s" % p.small_picture)
+                # recipe.small_picture = db.Blob(small_pic)
+                # recipe.big_picture = db.Blob(big_pic)
+                # recipe.avatar =  db.Blob(avatar)
+                recipe.picture_key = str(Pictures.add_picture(image,recipe.title))
                 recipe.put()
+
                 self.redirect(next_url)
         else:
-
-            picture = Pictures(page_name = "Creation")
-            picture.small_picture = db.Blob(small_pic)
-            picture.big_picture = db.Blob(big_pic)
-            picture.avatar =  db.Blob(avatar)
-            picture.put()
-            logging.error("no page from DB")
+            Pictures.add_picture(image,"Creation")
             self.redirect('/gallery')
-            #logging.error("r %s" % r.groups())
 
-            #logging.error("BLOB %s" % url)
-
-
-        #else:
-        #    self.redirect('/serve/%s' % blob_info.key())
-        #blob_key.urlsafe()
-        #image.imageUrl = images.get_serving_url(str(upload_files[0].key()))
 
 class ImageAv(webapp2.RequestHandler):
     def get(self):
@@ -885,6 +808,7 @@ class ImageAv(webapp2.RequestHandler):
 class Image(webapp2.RequestHandler):
     def get(self):
         page = db.get(self.request.get('img_id'))
+
         #logging.error("page %s" % page.small_picture)
         if page.small_picture:
             self.response.headers['Content-Type'] = 'image/png'

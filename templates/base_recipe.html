@@ -8,8 +8,8 @@
 
   <div class="post-info"
     <div class="post-picture">
-        {% if p.small_picture and noPictures == False %}
-            <a href="/imgB?img_id={{ p.key.id() }}">  <img src=/img?img_id={{ p.key.id() }}> </a>
+        {% if p.picture_key and noPictures == False %}
+            <a href="/imgB?img_id={{ p.picture_key }}">  <img src=/img?img_id={{ p.picture_key }}> </a>
         {% endif %}
     </div>
 {#      <div class="post-content">#}

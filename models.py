@@ -3,6 +3,7 @@
 from tools import *
 from google.appengine.ext import db
 from google.appengine.api import memcache
+from google.appengine.api import images
 import logging
 
 def blog_key(name='default'):
@@ -169,5 +170,29 @@ class Pictures(db.Model):
     small_picture = db.BlobProperty()
     big_picture = db.BlobProperty()
     avatar = db.BlobProperty()
+
+    @classmethod
+    def add_picture(cls, image, title=None):
+
+        image.resize(width=1024)
+        image.im_feeling_lucky()
+        big_pic = image.execute_transforms(output_encoding=images.JPEG)
+        image.resize(500,400)
+        small_pic = image.execute_transforms(output_encoding=images.JPEG)
+        image = rescale(img_data=image, width=75,height=75)
+        if title:
+            for i in range(1,10,1):
+                logging.error("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
+            picture = Pictures(page_name=title)
+        else:
+            picture = Pictures(page_name="Creation")
+        picture.small_picture = db.Blob(small_pic)
+        picture.big_picture = db.Blob(big_pic)
+        picture.avatar = db.Blob(image)
+        picture.put()
+
+        return picture.key()
+
+
 
 

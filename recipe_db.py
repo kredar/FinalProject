@@ -4,6 +4,8 @@ from tools import *
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 import logging
+from models import Pictures
+
 
 
 def top_recipes(update=False):
@@ -46,6 +48,12 @@ def add_recipe(id, owner, content, title, category):
     return True
 
 
+def add_recipe(id, owner, content, title, category):
+    p = Recipe(id=id, owner=owner, content=content, title=title, category=category).put()
+    #p.put()
+    return True
+
+
 def render_recipe(recipe, noPictures=True):
     """
     Render base_recipe.html
@@ -63,9 +71,7 @@ class Recipe(ndb.Model):
     category = ndb.TextProperty(required=True)
     title = ndb.StringProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
-    small_picture = ndb.BlobProperty()
-    big_picture = ndb.BlobProperty()
-    avatar = ndb.BlobProperty()
+    picture_key = ndb.StringProperty()
 
     def render(self, noPictures=True):
         """
@@ -76,6 +82,16 @@ class Recipe(ndb.Model):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("base_recipe.html", p=self, noPictures=noPictures)
 
+    @classmethod
+    def add_recipe(cls, r_id, owner, content, title, category):
+        p = Recipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
+        #p.put()
+        return True
+
+    def update_recipe(r_id, owner, content, title, category):
+        p = Recipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
+        #p.put()
+        return True
 
 
 class YourRecipe(ndb.Model):
