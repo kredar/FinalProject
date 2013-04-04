@@ -3,7 +3,7 @@
 from tools import *
 from google.appengine.ext import db
 from google.appengine.api import memcache
-
+import logging
 
 def blog_key(name='default'):
     return db.Key.from_path('blogs', name)
@@ -21,6 +21,8 @@ def top_posts(update=False):
     if posts is None or update:
         posts = Post.all().order('-created')
         posts = list(posts)
+        for post in posts:
+            logging.error(post)
         memcache.set(key, posts)
     return posts
 

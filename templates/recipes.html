@@ -5,7 +5,8 @@
 
 
     {% for p in recipes %}
-        {{ p.render(True) | safe }}
+
+        {{ p.render() | safe }}
         <br><br>
         <div class="edit-view">
 

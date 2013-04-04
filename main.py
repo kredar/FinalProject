@@ -224,7 +224,9 @@ class BlogFront(BasicHandler):
 
 
         """
+        posts =  top_posts(True)
         posts =  top_posts()
+
         self.render('front.html', posts = posts)
 
 
@@ -454,15 +456,21 @@ class AllRecipesPage(BasicHandler):
 class MyRecipesList(BasicHandler):
     def get(self):
         """This
-        \
-
-
-
-        
-            
 
         """
-        recipes = top_recipes()
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+        recipes = top_recipes(True)
+        recipes = top_recipes(True)
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+        logging.error("GETTING RECIPES")
+
         if recipes:
             self.render('recipes.html', recipes = recipes)
 
@@ -476,7 +484,6 @@ class YourRecipesList(BasicHandler):
 
         """
         self.render("underconstruction.html")
-
 
 
 class AddRecipe(BasicHandler):
@@ -502,7 +509,7 @@ class AddRecipe(BasicHandler):
 
         if r is None:
             error = "Recipe title should include only letters and digits"
-        elif ( self.isUserAdmin() and Recipe.get_by_key_name(pagename)):
+        elif ( self.isUserAdmin() and Recipe.get_by_id(pagename)):
         #     p=Recipe.get_by_key_name(pagename)
         #     if p:
             error = "This recipe page already exist, please use other name"
@@ -521,7 +528,7 @@ class AddRecipe(BasicHandler):
             #    p.title=title
             #else:
             if (self.isUserAdmin()):
-                p = Recipe(key_name = pagename, owner = str(self.get_user_name()), content = content, title = title, recipe_name = title , category = category)
+                p = add_recipe(id = pagename, owner = str(self.get_user_name()), content = content, title = title, category = category)
             else:
                 p = YourRecipe(key_name = pagename, owner = str(self.get_user_name()), content = content, title = title, recipe_name = title , category = category)
             #photo = self.request.get('img')
@@ -533,7 +540,7 @@ class AddRecipe(BasicHandler):
             #p.photo = db.Blob(photo)
 
             #h = History(page_name = page_name, content = content)
-            p.put()
+            #p.put()
             #h.put()
             page_link='/recipes%s' % pagename
             # logging.error(page_name)
@@ -715,6 +722,48 @@ class UploadPage(BasicHandler):
         else:
             self.redirect('/login')
 
+def rescale(img_data, width, height, halign='middle', valign='middle'):
+
+    """Resize then optionally crop a given image.
+
+    Attributes:
+      img_data: The image data
+      width: The desired width
+      height: The desired height
+      halign: Acts like photoshop's 'Canvas Size' function, horizontally
+              aligning the crop to left, middle or right
+      valign: Verticallly aligns the crop to top, middle or bottom
+
+    """
+    image = img_data#images.Image(img_data)
+
+    desired_wh_ratio = float(width) / float(height)
+    wh_ratio = float(image.width) / float(image.height)
+
+    if desired_wh_ratio > wh_ratio:
+        # resize to width, then crop to height
+        image.resize(width=width)
+        image.execute_transforms()
+        trim_y = (float(image.height - height) / 2) / image.height
+        if valign == 'top':
+            image.crop(0.0, 0.0, 1.0, 1 - (2 * trim_y))
+        elif valign == 'bottom':
+            image.crop(0.0, (2 * trim_y), 1.0, 1.0)
+        else:
+            image.crop(0.0, trim_y, 1.0, 1 - trim_y)
+    else:
+        # resize to height, then crop to width
+        image.resize(height=height)
+        image.execute_transforms()
+        trim_x = (float(image.width - width) / 2) / image.width
+        if halign == 'left':
+            image.crop(0.0, 0.0, 1 - (2 * trim_x), 1.0)
+        elif halign == 'right':
+            image.crop((2 * trim_x), 0.0, 1.0, 1.0)
+        else:
+            image.crop(trim_x, 0.0, 1 - trim_x, 1.0)
+
+    return image.execute_transforms()
 
 class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
 #    def post(self):
@@ -738,6 +787,8 @@ class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
 #        self.redirect('/?' + urllib.urlencode(
 #            {'guestbook_name': guestbook_name}))
 
+
+
     def post(self):
         next_url = str(self.request.get("page_name"))
         if not next_url or next_url.startswith('/login'):
@@ -755,9 +806,10 @@ class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
         big_pic = avatar.execute_transforms(output_encoding=images.JPEG)
         avatar.resize(500,400)
         small_pic = avatar.execute_transforms(output_encoding=images.JPEG)
-        avatar.resize(75, 75)
-        avatar = avatar.execute_transforms(output_encoding=images.JPEG)
+        #avatar.resize(75, 75)
 
+        #avatar = avatar.execute_transforms(output_encoding=images.JPEG)
+        avatar = rescale(img_data=avatar, width=75,height=75)
         # logging.error("AVATAR %s" % avatar)
 
         #avatar = avatar.execute_transforms(output_encoding=images.JPEG)
