@@ -170,9 +170,10 @@ class Pictures(db.Model):
     small_picture = db.BlobProperty()
     big_picture = db.BlobProperty()
     avatar = db.BlobProperty()
+    recipe_link = db.StringProperty()
 
     @classmethod
-    def add_picture(cls, image, title=None):
+    def add_picture(cls, image, title=None, recipe_link=None):
 
         image.resize(width=1024)
         image.im_feeling_lucky()
@@ -189,6 +190,10 @@ class Pictures(db.Model):
         picture.small_picture = db.Blob(small_pic)
         picture.big_picture = db.Blob(big_pic)
         picture.avatar = db.Blob(image)
+
+        if recipe_link:
+            picture.recipe_link = recipe_link
+
         picture.put()
 
         return picture.key()

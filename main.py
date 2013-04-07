@@ -781,7 +781,8 @@ class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
                 # recipe.small_picture = db.Blob(small_pic)
                 # recipe.big_picture = db.Blob(big_pic)
                 # recipe.avatar =  db.Blob(avatar)
-                recipe.picture_key = str(Pictures.add_picture(image,recipe.title))
+
+                recipe.picture_key = str(Pictures.add_picture(image,recipe.title,next_url))
                 recipe.put()
 
                 self.redirect(next_url)

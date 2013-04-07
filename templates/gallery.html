@@ -44,6 +44,10 @@
                                         {% if p.description %}
                                             {{ p.description }}
                                         {% endif %}
+                                        {% if p.recipe_link %}
+                                            <a  href={{ p.recipe_link }} >Recipe</a>
+                                        {% endif %}
+
                                     </div>
                                     <div class="download">
                                         <a href="/imgB?img_id={{ p.key() }}">Download Original</a>
