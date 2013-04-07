@@ -68,7 +68,7 @@ class Recipe(ndb.Model):
     owner = ndb.StringProperty(required=True)
     #recipe_name = db.StringProperty(required = True)
     content = ndb.TextProperty(required=True)
-    category = ndb.TextProperty(required=True)
+    category = ndb.StringProperty(required=True, indexed=True)
     title = ndb.StringProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
     picture_key = ndb.StringProperty()
@@ -88,7 +88,15 @@ class Recipe(ndb.Model):
         #p.put()
         return True
 
-    def update_recipe(r_id, owner, content, title, category):
+    @classmethod
+    def get_recipes_by_category(cls, category):
+        logging.error("Category CategoryCategoryCategoryCategoryCategoryCategory %s" % category)
+        if category == "All":
+            return top_recipes()
+        else:
+            return Recipe.query(Recipe.category == category)
+
+    def update_recipe(self, r_id, owner, content, title, category):
         p = Recipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
         #p.put()
         return True
@@ -98,7 +106,7 @@ class YourRecipe(ndb.Model):
     owner = ndb.StringProperty(required=True)
     #recipe_name = db.StringProperty(required = True)
     content = ndb.TextProperty(required=True)
-    category = ndb.TextProperty(required=True)
+    category = ndb.StringProperty(required=True, indexed=True)
     title = ndb.StringProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
     small_picture = ndb.BlobProperty()

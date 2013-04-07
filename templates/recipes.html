@@ -3,6 +3,25 @@
 {% block content %}
 
 
+    {% if isLogedIn %}
+        <a  href={{ "/recipes/addrecipe" }}>add new recipe</a>
+    {% endif %}
+
+
+    <form method="post">
+
+        <label for="Filter">
+        <select name="filter">
+            {% for category in categories %}
+
+                <option value={{ category }}>{{ category }}</option>
+            {% endfor %}
+        </select>
+        </label>
+        <input type="submit" value="Filter">
+    </form>
+
+
 
     {% for p in recipes %}
 

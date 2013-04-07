@@ -449,7 +449,7 @@ class Welcome(BasicHandler):
 
 class AllRecipesPage(BasicHandler):
     def get(self):
-        self.render('all_recipes.html', isLogedIn = self.userLogedIn() )
+        self.render('all_recipes.html')
 
 
 
@@ -458,24 +458,21 @@ class MyRecipesList(BasicHandler):
         """This
 
         """
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
-        recipes = top_recipes(True)
-        recipes = top_recipes(True)
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
-        logging.error("GETTING RECIPES")
+        category = self.request.get('category')
+        recipes = Recipe.get_recipes_by_category(category)
 
         if recipes:
-            self.render('recipes.html', recipes = recipes)
-
+            self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
         else:
             self.redirect('/Welcome')
+
+    def post(self):
+        """This
+
+        """
+        category=self.request.get('filter')
+        self.redirect("/my_recipes?category=%s" % category)
+
 
 class YourRecipesList(BasicHandler):
     def get(self):
