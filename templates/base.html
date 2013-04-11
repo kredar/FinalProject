@@ -21,7 +21,7 @@
 
 <body>
 <div class="navbar-wrapper"> 
-<!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
+  <!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
   <div class="container">
     <div class="navbar navbar-inverse">
       <div class="navbar-inner"> 
@@ -35,7 +35,7 @@
             <li><a href="/gallery">Gallery</a></li>
             <li><a href="/recipes">Recipes</a></li>
             <li><a href="/blog">Blog</a></li>
-         	{% if isUserAdmin %}
+            {% if isUserAdmin %}
             <li><a class="login-link" href="/blog/newpost">New Post</a></li>
             {% endif %}
             <li><a href="/about">About</a></li>
@@ -46,9 +46,8 @@
             {% else %}
             <li><a class="login-link" href="/login">Login</a></li>
             <li><a href="/signup">Signup</a></li>
-            {% endif %}            
+            {% endif %}
           </ul>
-
         </div>
         <!--/.nav-collapse --> 
       </div>
@@ -58,18 +57,12 @@
   </div>
   <!-- /.container --> 
 </div>
-
-
-
-<div id="content"> {% block content %}
-  {% endblock %} </div>
-
-<div class="container">
+<div class="container"> {% block content %}
+  {% endblock %}
   <footer>&copy; Art Kreimer</footer>
 </div>
 <!-- /container --> 
 <script src="http://code.jquery.com/jquery.js"></script> 
 <script src="../js/bootstrap.js"></script>
-
 </body>
 </html>
