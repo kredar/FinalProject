@@ -2,99 +2,25 @@
 
 {% block head_content %}
 
-<link type="text/css" rel="stylesheet" href="/static/main.css" />
-
-
-      <style type="text/css" media="screen">
-          #slider1 {
-              width: 800px; /* important to be same as image width */
-              height: 451px; /* important to be same as image height */
-              position: relative; /* important */
-              overflow: hidden; /* important */
-          }
-
-          #slider1Content {
-              width: 800px; /* important to be same as image width or wider */
-              position: absolute;
-              top: 0;
-              margin-left: 0;
-          }
-          .slider1Image {
-              float: left;
-              position: relative;
-              display: none;
-          }
-          .slider1Image span {
-              position: absolute;
-              font: 10px/15px Arial, Helvetica, sans-serif;
-              padding: 10px 13px;
-              width: 694px;
-              background-color: #000;
-              filter: alpha(opacity=70);
-              -moz-opacity: 0.7;
-              -khtml-opacity: 0.7;
-              opacity: 0.7;
-              color: #fff;
-              display: none;
-          }
-          .clear {
-              clear: both;
-          }
-          .slider1Image span strong {
-              font-size: 14px;
-          }
-          .left {
-              top: 0;
-              left: 0;
-              width: 110px !important;
-              height: 350px;
-          }
-          .right {
-              right: 0;
-              bottom: 0;
-              width: 110px !important;
-              height: 400px;
-          }
-          ul { list-style-type: none;}
-      </style>
-      <!-- JavaScripts-->
-      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-      <script type="text/javascript" src="js/s3Slider.js"></script>
-      <script type="text/javascript">
-          $(document).ready(function() {
-              $('#slider1').s3Slider({
-                  timeOut: 4000
-              });
-          });
-      </script>
-
-
 {% endblock %}
 
 {% block content %}
-{#   <div id="welcome">#}
-{#    <a class="main-title" name="MaBakery"><h2>Welcome to MaCreations</h2></a>#}
-{#  </div>#}
-  <div id="slider1">
-      <ul id="slider1Content">
-          <li class="slider1Image">
-              <a href=""><img src="images/castle.jpg" alt="1" /></a>
-              <span class="left"><strong>Title text 1</strong><br />Content text...</span></li>
-          <li class="slider1Image">
-              <a href=""><img src="images/frogy.jpg" alt="2" /></a>
-              <span class="right"><strong>Title text 2</strong><br /> </span></li>
-          <li class="slider1Image">
-              <img src="images/HB_alex.jpg" alt="3" />
-              <span class="right"><strong>Title text 2</strong><br />Content text...</span></li>
-          <li class="slider1Image">
-              <img src="images/napoleon.jpg" alt="4" />
-              <span class="left"><strong>Title text 2</strong><br />Content text...</span></li>
-          <li class="slider1Image">
-              <img src="images/nice_day.jpg" alt="5" />
-              <span class="right"><strong>Title text 2</strong><br />Content text...</span></li>
-          <div class="clear slider1Image"></div>
-      </ul>
+<div id="myCarousel" class="carousel slide">
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+    <li data-target="#myCarousel" data-slide-to="2"></li>
+    <li data-target="#myCarousel" data-slide-to="3"></li>
+    <li data-target="#myCarousel" data-slide-to="4"></li>
+  </ol>
+  <!-- Carousel items -->
+  <div class="carousel-inner">
+    <div class="active item"><a href=""><img src="images/castle.jpg" alt="1" /></a></div>
+    <div class="item"><a href=""><img src="images/frogy.jpg" alt="2" /></a></div>
+    <div class="item"><img src="images/HB_alex.jpg" alt="3" /></div>
+    <div class="item"><img src="images/napoleon.jpg" alt="4" /></div>
+    <div class="item"><img src="images/nice_day.jpg" alt="5" /></div>
   </div>
-  <!-- // slider -->
-
-  {% endblock %}
+  <!-- Carousel nav --> 
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a> <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a> </div>
+{% endblock %} 
