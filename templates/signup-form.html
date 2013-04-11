@@ -5,34 +5,31 @@
   <h2>Signup</h2>
   <form method="post" class="form-horizontal">
     <div class="control-group">
-      <label class="control-label" for="username">Username&nbsp;{{error_username}}</label>
+      <label class="control-label" for="username">Username</label>
       <div class="controls">
-        <input type="text" name="username" value="{{username}}" id="username" placeholder="username">
-      </div>
+        <input type="text" name="username" value="{{username}}" id="username" placeholder="Choose your username">
+        &nbsp;{{error_username}} </div>
     </div>
     <div class="control-group">
-      <label class="control-label" for="Password">Password&nbsp;{{error_password}}</label>
+      <label class="control-label" for="Password">Password</label>
       <div class="controls">
-        <input type="text" name="password" id="password" placeholder="password">
-      </div>
+        <input type="password" name="password" id="password">
+        &nbsp;{{error_password}} </div>
     </div>
     <div class="control-group">
-      <label class="control-label" for="verify">Verify Password&nbsp;{{error_verify}}</label>
+      <label class="control-label" for="verify">Verify Password</label>
       <div class="controls">
-        <input type="text" name="verify" id="verify" placeholder="verify">
-      </div>
+        <input type="password" name="verify" id="verify">
+        &nbsp;{{error_verify}} </div>
     </div>
     <div class="control-group">
-      <label class="control-label" for="email">Email (optional)&nbsp;{{error_email}}</label>
+      <label class="control-label" for="email">Email (optional</label>
       <div class="controls">
-        <input type="text" name="email" value="{{email}}" id="email" placeholder="email">
-      </div>
+        <input type="text" name="email" value="{{email}}" id="email" placeholder="Enter your email">
+        )&nbsp;{{error_email}} </div>
     </div>
     <div class="control-group">
       <div class="controls">
-        <label class="checkbox">
-          <input type="checkbox">
-          Remember me </label>
         <button type="submit" class="btn">Sign in</button>
         <input type="hidden" name="next_url" value={{ next_url }}>
       </div>
