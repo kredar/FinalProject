@@ -476,12 +476,23 @@ class MyRecipesList(BasicHandler):
 
 class YourRecipesList(BasicHandler):
     def get(self):
+        """This
+
         """
+        category = self.request.get('category')
+        recipes = YourRecipe.get_recipes_by_category(category)
 
+        if recipes:
+            self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
+        else:
+            self.redirect('/Welcome')
+
+    def post(self):
+        """This
 
         """
-        self.render("underconstruction.html")
-
+        category=self.request.get('filter')
+        self.redirect("/your_recipes?category=%s" % category)
 
 class AddRecipe(BasicHandler):
     def get(self):
@@ -512,7 +523,7 @@ class AddRecipe(BasicHandler):
             error = "This recipe page already exist, please use other name"
         #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
         #
-        elif ( not self.isUserAdmin() and YourRecipe.get_by_key_name(pagename)):
+        elif ( not self.isUserAdmin() and YourRecipe.get_recipe_by_name(pagename)):
         #     p=Recipe.get_by_key_name(pagename)
         #     if p:
             error = "This recipe page already exist, please use other name"
@@ -527,7 +538,7 @@ class AddRecipe(BasicHandler):
             if (self.isUserAdmin()):
                 p = add_recipe(id = pagename, owner = str(self.get_user_name()), content = content, title = title, category = category)
             else:
-                p = YourRecipe(key_name = pagename, owner = str(self.get_user_name()), content = content, title = title, recipe_name = title , category = category)
+                p = YourRecipe.add_recipe(name = pagename, owner = str(self.get_user_name()), content = content, title = title, category = category)
             #photo = self.request.get('img')
             # 'file' is file upload field in the form
             #blob_info = upload_files[0]

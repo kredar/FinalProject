@@ -66,7 +66,6 @@ def render_recipe(recipe, noPictures=True):
 
 class Recipe(ndb.Model):
     owner = ndb.StringProperty(required=True)
-    #recipe_name = db.StringProperty(required = True)
     content = ndb.TextProperty(required=True)
     category = ndb.StringProperty(required=True, indexed=True)
     title = ndb.StringProperty()
@@ -83,8 +82,8 @@ class Recipe(ndb.Model):
         return render_str("base_recipe.html", p=self, noPictures=noPictures)
 
     @classmethod
-    def add_recipe(cls, r_id, owner, content, title, category):
-        p = Recipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
+    def add_recipe(cls, name, owner, content, title, category):
+        p = Recipe(id=name, owner=owner, content=content, title=title, category=category).put()
         #p.put()
         return True
 
@@ -101,19 +100,33 @@ class Recipe(ndb.Model):
         #p.put()
         return True
 
+    @classmethod
+    def get_recipe_by_name(cls, recipe_name):
+        """
 
-class YourRecipe(ndb.Model):
-    owner = ndb.StringProperty(required=True)
-    #recipe_name = db.StringProperty(required = True)
-    content = ndb.TextProperty(required=True)
-    category = ndb.StringProperty(required=True, indexed=True)
-    title = ndb.StringProperty()
-    created = ndb.DateTimeProperty(auto_now_add=True)
-    small_picture = ndb.BlobProperty()
-    big_picture = ndb.BlobProperty()
-    avatar = ndb.BlobProperty()
+        :param recipe_name:
+        :return:
+        """
+        p = Recipe.get_by_id(recipe_name)
+        return p
 
-    def render(self, noPictures=True):
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("base_recipe.html", p=self, noPictures=noPictures)
+
+class YourRecipe(Recipe):
+
+    @classmethod
+    def get_recipes_by_category(cls, category):
+        logging.error("Category CategoryCategoryCategoryCategoryCategoryCategory %s" % category)
+        if category == "All":
+            return top_recipes()
+        else:
+            return YourRecipe.query(Recipe.category == category)
+
+    def update_recipe(self, r_id, owner, content, title, category):
+        p = YourRecipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
+        #p.put()
+        return True
+
+        # def render(self, noPictures=True):
+    #     self._render_text = self.content.replace('\n', '<br>')
+    #     return render_str("base_recipe.html", p=self, noPictures=noPictures)
 
