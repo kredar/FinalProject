@@ -43,7 +43,8 @@
           </ul>
           <ul class="nav pull-right">
             {% if logged_in %}
-            <li><a href="#">{{user_name}}</a> | <a href={{ logoutLink }}>Logout</a></li>
+            <li><a href="#">{{user_name}}</a></li>
+            <li><a href={{ logoutLink }}>Logout</a></li>
             {% else %}
             <li><a class="login-link" href="/login">Login</a></li>
             <li><a href="/signup">Signup</a></li>
