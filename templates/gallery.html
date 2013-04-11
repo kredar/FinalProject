@@ -21,7 +21,6 @@
 {% block content %}
     <div id="page">
         <div id="container">
-{#            <h1><a href="/Welcome">My Creations</a></h1>#}
             {% if isUserAdmin %}
                 <a  href={{ "/recipes/_upload" }}> upload Picture</a>
                 <br>
@@ -32,11 +31,11 @@
                 <div id="thumbs" class="navigation">
                     <a class="pageLink prev" style="visibility: hidden;" href="#" title="Previous Page"></a>
 
-                    <ul class="thumbs noscript">
+                    <ul class="thumbnails">
                         {% for p in recipes %}
                             <li>
-                                <a class="thumb" href="/img?img_id={{ p.key() }}" title="Title #0">
-                                    <img src="/imgAv?img_id={{ p.key() }}" alt="Title #23" />
+                                <a class="thumbnail" href="/img?img_id={{ p.key() }}" title="Title #0">
+                                    <img data-src="holder.js/200x200" src="imgAv?img_id={{ p.key() }}" alt="" />
                                 </a>
                                 <div class="caption">
                                     <div class="image-title">{{ p.page_name }}</div>
