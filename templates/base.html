@@ -40,9 +40,10 @@
             {% endif %}
             <li><a href="/about">About</a></li>
             <li><a href="/contact">Contact</a></li>
+          </ul>
+          <ul class="nav pull-right">
             {% if logged_in %}
-            <li><a href="#">{{user_name}}</a></li>
-            <li><a href={{ logoutLink }}>Logout</a></li>
+            <li><a href="#">Logged in as {{user_name}}</a>&nbsp;|&nbsp;<a href={{ logoutLink }}>Logout</a></li>
             {% else %}
             <li><a class="login-link" href="/login">Login</a></li>
             <li><a href="/signup">Signup</a></li>
