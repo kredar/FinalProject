@@ -28,6 +28,7 @@ from defines import *
 from tools import *
 from rating import *
 from recipe_db import *
+from recipe_comments import *
 
 
 #template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -649,16 +650,22 @@ class RecipePage(BasicHandler):
             if p:
                 rating = getRating(page_name)
                 rating = getRating(page_name)
-                self.render("singleRecipe.html", page = p , edit_link = edit_link, s = self, rating = rating)
+                comments = Recipe_comments.get_comments_for_recipe(page_name)
+                #comments = Recipe_comments.get_comments_for_recipe(page_name)
+                self.render("singleRecipe.html", page = p , edit_link = edit_link, s = self, rating = rating, comments=comments)
             else:
                 self.redirect(edit_link)
 
 
     def post(self, page_name):
         rating = self.request.get('rating')
+        comment = self.request.get('comment')
         if self.userLogedIn():
             if rating:
                 update_rating(page_name, self.get_current_username(), rating)
+                self.redirect('/recipes%s' %page_name)
+            if comment:
+                Recipe_comments.add_comment(self.get_current_username(), recipe_name=page_name, comment=comment)
                 self.redirect('/recipes%s' %page_name)
         else:
             self.redirect('/login')

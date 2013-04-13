@@ -2,8 +2,9 @@
 
 {% block content %}
     <div class="content"><h2>Recipe:</h2>
+    {% if page %}
        {{page.render(False) | safe}}
-
+    {% endif %}
           <div class="post-content">
             {{page._render_text | safe}}
           </div>
@@ -19,6 +20,7 @@
         {#      <a class="login-link" href={{ history_link }}> history</a>#}
     {% endif %}
     </div>
+    </div>
     <br><br>
         <div class="rating">
             <a class="rating">Rating
@@ -30,7 +32,7 @@
             </a>
         </div>
         <br>
-        <div class="addcomment">
+        <div class="rating">
             <form method="post">
 
                 <label for="Rate">Rate:</label>
@@ -44,7 +46,37 @@
                 <input type="submit" value="Submit Rating">
             </form>
         </div>
+    <div class="addcomment">
+        <form method="post">
 
+            <label>
+                {#            <div>Recipe Ingredients</div>#}
+                <label for="Comment">Comment:</label>
+                <textarea name="comment" rows="1" cols="1" style="width: 300px;
+            height: 100px;
+            font-size: 17px;
+            font-family: monospace;
+            border: 3px solid #cccccc;"></textarea>
+            </label>
+            <input type="submit">
+        </form>
     </div>
-    {#    <div class="last_queried"> Queried {{q_time}} seconds ago</div>#}
+
+    <div class="comments">
+        <b>Comments:</b>
+        {% if comments %}
+            {% for c in comments %}
+                <div class="comment">
+                    <div class="submitter">
+                        <i>{{ c.submitter }} wrote:</i>
+                    </div>
+                    <div class="comment_content">{{ c.comment }}</div>
+                </div>
+                <br>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
+
 {% endblock %}

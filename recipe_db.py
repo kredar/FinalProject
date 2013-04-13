@@ -83,7 +83,16 @@ class Recipe(ndb.Model):
 
     @classmethod
     def add_recipe(cls, name, owner, content, title, category):
-        p = Recipe(id=name, owner=owner, content=content, title=title, category=category).put()
+        """
+
+        :param name:
+        :param owner:
+        :param content:
+        :param title:
+        :param category:
+        :return:
+        """
+        Recipe(id=name, owner=owner, content=content, title=title, category=category).put()
         #p.put()
         return True
 
@@ -110,11 +119,41 @@ class Recipe(ndb.Model):
         p = Recipe.get_by_id(recipe_name)
         return p
 
+    @classmethod
+    def top_recipes(cls, update=False):
+        key = 'top_recipes'
+        recipes = memcache.get(key)
+        if recipes is None or update:
+            recipes = Recipe.query()
+            #recipes = ndb.gql("SELECT * FROM Recipe")
+            #results = recipes.fetch(10)
+            #recipes = list(recipes)
+            for recipe in recipes:
+                logging.error(recipe)
+            memcache.set(key, recipes)
+        return recipes
+
+    @classmethod
+    def get_recipe_key(cls, recipe_name):
+        """
+
+        :param recipe_name:
+        :return: key for given recipe name
+        """
+        key = Recipe.get_by_id(recipe_name).key()
+        return key
+
 
 class YourRecipe(Recipe):
 
     @classmethod
     def get_recipes_by_category(cls, category):
+
+        """
+
+        :param category:
+        :return:
+        """
         logging.error("Category CategoryCategoryCategoryCategoryCategoryCategory %s" % category)
         if category == "All":
             return top_recipes()

@@ -37,3 +37,9 @@ indexes:
   properties:
   - name: date
     direction: desc
+
+- kind: Recipe_comments
+  properties:
+  - name: recipe
+  - name: created
+    direction: desc
