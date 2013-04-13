@@ -11,11 +11,9 @@
     {% endif %}
     <div class="addcomment">
         <form method="post">
-
-            <label>
-                {#            <div>Recipe Ingredients</div>#}
-                <label for="Comment">Comment:</label>
+                <label for="Comment">Comment:
                 <textarea name="comment" rows="1" cols="1" style="width: 300px;
+
             height: 100px;
             font-size: 17px;
             font-family: monospace;
@@ -25,11 +23,11 @@
         </form>
     </div>
     <div class="comments">
-        <b>Comments:</b>
+        <strong>Comments:</strong>
         {% for c in comments %}
             <div class="comment">
                 <div class="submitter">
-                    <i>{{ c.submitter }} wrote:</i>
+                    <em>{{ c.submitter }} wrote:</em>
                 </div>
                 <div class="comment_content">{{ c.comment }}</div>
             </div>

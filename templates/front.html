@@ -4,7 +4,5 @@
 
   {% for p in posts %}
     {{ p.render() | safe }}
-{#    <br><br>#}
   {% endfor %}
-{#    <div class="last_queried"> Queried {{q_time}} seconds ago</div>#}
 {% endblock %}

@@ -2,34 +2,30 @@
 
 {% block content %}
     {% if newrecipe %}
-        <h2>New recipe: <i>{{ title }}</i> </h2>
+        <h2>New recipe: <em>{{ title }}</em> </h2>
     {% else %}
-        <h2>Editing recipe: <i>{{ title }}</i> </h2>
+        <h2>Editing recipe: <em>{{ title }}</em> </h2>
     {% endif %}
     <form method="post">
 
-            <label>title:</label>
+            <label>title:
             <input type="text" name="title" value="{{title}}">
-            <label for="Category">category:</label>
+            </label>
+            <label for="Category">category:
             <select name="category">
                 {% for category in categories %}
 
                     <option value={{ category }}>{{ category }}</option>
                 {% endfor %}
                  </select>
-            <label for="Content">content:</label>
+            </label>
+            <label for="Content">content:
             <textarea name="content">{{content}}</textarea>
-
+            </label>
         <div class="error">{{error}}</div>
 
 
         <input type="submit" value="save">
     </form>
-
-
-{#    <form action="up" method="post" enctype="multipart/form-data">#}
-{#        Upload file: <input type="file" name="myfile" /> <br />#}
-{#        <input type="submit" name="submit" value="Submit" />#}
-{#    </form>#}
 
 {% endblock %}
