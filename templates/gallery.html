@@ -11,15 +11,16 @@
             <li data-target="#myCarousel" data-slide-to="4"></li>
         </ol>
         <!-- Carousel items -->
-        <div class="carousel-inner"> {% for p in recipes %}
-            <div class="item"> <img src="imgAv?img_id={{ p.key() }}" alt="{{ p.page_name }}" />
+        <div class="carousel-inner">
+            {% for p in recipes %}
+            <div class="item"> <img src="img?img_id={{ p.key() }}" alt="{{ p.page_name }}" />
                 <div class="carousel-caption">
                     <h4>{{ p.page_name }}</h4>
                     {% if p.description %}
                         <p>{{ p.description }}</p>
                     {% endif %} </div>
             </div>
-        {% endfor %} </div>
+            {% endfor %} </div>
         <!-- Carousel nav -->
         <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a> <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a></div>
     <ul class="thumbnails">
