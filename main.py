@@ -117,6 +117,7 @@ class BasicHandler(webapp2.RequestHandler):
         current_user = user.name
         # logging.error(str(user.key().id()))
         self.set_secure_cookie('user_id', str(user.key().id()))
+        #self.set_secure_cookie('user_id', user.name)
 
     def logout(self):
         if self.user:
@@ -460,7 +461,7 @@ class MyRecipesList(BasicHandler):
 
         """
         category = self.request.get('category')
-        recipes = Recipe.get_recipes_by_category(category)
+        recipes = Recipe.get_recipes_by_category(category, True)
 
         if recipes:
             self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
@@ -481,7 +482,7 @@ class YourRecipesList(BasicHandler):
 
         """
         category = self.request.get('category')
-        recipes = YourRecipe.get_recipes_by_category(category)
+        recipes = Recipe.get_recipes_by_category(category, False)
 
         if recipes:
             self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
@@ -493,7 +494,7 @@ class YourRecipesList(BasicHandler):
 
         """
         category=self.request.get('filter')
-        self.redirect("/your_recipes?category=%s" % category)
+        self.redirect("/my_recipes?category=%s" % category)
 
 class AddRecipe(BasicHandler):
     def get(self):
@@ -524,7 +525,7 @@ class AddRecipe(BasicHandler):
             error = "This recipe page already exist, please use other name"
         #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
         #
-        elif ( not self.isUserAdmin() and YourRecipe.get_recipe_by_name(pagename)):
+        elif ( not self.isUserAdmin() and Recipe.get_recipe_by_name(pagename)):
         #     p=Recipe.get_by_key_name(pagename)
         #     if p:
             error = "This recipe page already exist, please use other name"
@@ -537,9 +538,9 @@ class AddRecipe(BasicHandler):
             #    p.title=title
             #else:
             if (self.isUserAdmin()):
-                p = add_recipe(id = pagename, owner = str(self.get_user_name()), content = content, title = title, category = category)
+                p = add_recipe(id = pagename, owner = str(self.get_current_username()), content = content, title = title, category = category)
             else:
-                p = YourRecipe.add_recipe(name = pagename, owner = str(self.get_user_name()), content = content, title = title, category = category)
+                p = Recipe.add_recipe(name = pagename, owner = str(self.get_current_username()), content = content, title = title, category = category)
             #photo = self.request.get('img')
             # 'file' is file upload field in the form
             #blob_info = upload_files[0]

@@ -7,7 +7,6 @@ import logging
 from models import Pictures
 
 
-
 def top_recipes(update=False):
     key = 'top_recipes'
     recipes = memcache.get(key)
@@ -31,6 +30,7 @@ def get_recipe_key(recipe_name):
     key = Recipe.get_by_id(recipe_name).key()
     return key
 
+
 def get_recipe_by_name(recipe_name):
     """
 
@@ -47,11 +47,11 @@ def add_recipe(id, owner, content, title, category):
     #p.put()
     return True
 
-
-def add_recipe(id, owner, content, title, category):
-    p = Recipe(id=id, owner=owner, content=content, title=title, category=category).put()
-    #p.put()
-    return True
+#
+# def add_recipe(id, owner, content, title, category):
+#     p = Recipe(id=id, owner=owner, content=content, title=title, category=category).put()
+#     #p.put()
+#     return True
 
 
 def render_recipe(recipe, noPictures=True):
@@ -97,12 +97,18 @@ class Recipe(ndb.Model):
         return True
 
     @classmethod
-    def get_recipes_by_category(cls, category):
-        logging.error("Category CategoryCategoryCategoryCategoryCategoryCategory %s" % category)
-        if category == "All":
-            return top_recipes()
+    def get_recipes_by_category(cls, category, is_admin):
+        if is_admin:
+            if category == "All":
+                return Recipe.my_top_recipes()
+            else:
+                recipes = Recipe.query(Recipe.category == category, Recipe.owner == 'admin').fetch(10)
+                return recipes
         else:
-            return Recipe.query(Recipe.category == category)
+            if category == "All":
+                return Recipe.your_top_recipes()
+            else:
+                return Recipe.query(Recipe.category == category, Recipe.owner != 'admin').fetch(10)
 
     def update_recipe(self, r_id, owner, content, title, category):
         p = Recipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
@@ -120,16 +126,20 @@ class Recipe(ndb.Model):
         return p
 
     @classmethod
-    def top_recipes(cls, update=False):
-        key = 'top_recipes'
+    def my_top_recipes(cls, update=False):
+        key = 'my_top_recipes'
         recipes = memcache.get(key)
         if recipes is None or update:
-            recipes = Recipe.query()
-            #recipes = ndb.gql("SELECT * FROM Recipe")
-            #results = recipes.fetch(10)
-            #recipes = list(recipes)
-            for recipe in recipes:
-                logging.error(recipe)
+            recipes = Recipe.query(Recipe.owner == 'admin').fetch(10)
+            memcache.set(key, recipes)
+        return recipes
+
+    @classmethod
+    def your_top_recipes(cls, update=False):
+        key = 'your_top_recipes'
+        recipes = memcache.get(key)
+        if recipes is None or update:
+            recipes = Recipe.query(Recipe.owner != 'admin').fetch(10)
             memcache.set(key, recipes)
         return recipes
 
@@ -143,29 +153,4 @@ class Recipe(ndb.Model):
         key = Recipe.get_by_id(recipe_name).key()
         return key
 
-
-class YourRecipe(Recipe):
-
-    @classmethod
-    def get_recipes_by_category(cls, category):
-
-        """
-
-        :param category:
-        :return:
-        """
-        logging.error("Category CategoryCategoryCategoryCategoryCategoryCategory %s" % category)
-        if category == "All":
-            return top_recipes()
-        else:
-            return YourRecipe.query(Recipe.category == category)
-
-    def update_recipe(self, r_id, owner, content, title, category):
-        p = YourRecipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
-        #p.put()
-        return True
-
-        # def render(self, noPictures=True):
-    #     self._render_text = self.content.replace('\n', '<br>')
-    #     return render_str("base_recipe.html", p=self, noPictures=noPictures)
 
