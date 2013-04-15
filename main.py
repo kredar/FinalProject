@@ -519,54 +519,26 @@ class AddRecipe(BasicHandler):
 
         if r is None:
             error = "Recipe title should include only letters and digits"
-        elif ( self.isUserAdmin() and get_recipe_by_name(pagename)):
+        elif (Recipe.get_recipe_by_name(pagename)):
         #     p=Recipe.get_by_key_name(pagename)
         #     if p:
             error = "This recipe page already exist, please use other name"
-        #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
-        #
-        elif ( not self.isUserAdmin() and Recipe.get_recipe_by_name(pagename)):
-        #     p=Recipe.get_by_key_name(pagename)
-        #     if p:
-            error = "This recipe page already exist, please use other name"
-        #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
-        #
+        # #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
+        # #
+        # elif ( not self.isUserAdmin() and Recipe.get_recipe_by_name(pagename)):
+        # #     p=Recipe.get_by_key_name(pagename)
+        # #     if p:
+        #     error = "This recipe page already exist, please use other name"
+        # #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
+        # #
         elif content and title and error == None:
-            #p=Recipe.get_by_key_name(page_name)
-            #if p:
-            #    p.content=content
-            #    p.title=title
-            #else:
-            if (self.isUserAdmin()):
-                p = add_recipe(id = pagename, owner = str(self.get_current_username()), content = content, title = title, category = category)
-            else:
-                p = Recipe.add_recipe(name = pagename, owner = str(self.get_current_username()), content = content, title = title, category = category)
-            #photo = self.request.get('img')
-            # 'file' is file upload field in the form
-            #blob_info = upload_files[0]
-            #blob_info = upload_files[0]
-            #self.redirect('/serve/%s' % blob_info.key())
-
-            #p.photo = db.Blob(photo)
-
-            #h = History(page_name = page_name, content = content)
-            #p.put()
-            #h.put()
+            p = Recipe.add_recipe(name = pagename, owner = str(self.get_current_username()), content = content, title = title, category = category)
             page_link='/recipes%s' % pagename
-            # logging.error(page_name)
             self.redirect(str(page_link))
-            #self.redirect('/serve/%s' % blob_info.key())
-            #self.redirect('/?' + urllib.urlencode(
-            #    {'guestbook_name': guestbook_name}))
         elif not content:
             error = "Recipe content, please!"
-            #self.render("newpost.html", subject=subject, content=content, error=error)
-            #self.render("edit_recipe.html", title = title, content="", s = self, categories = recipe_categories , error=error)
         elif not title:
             error = "Recipe title, please!"
-            #self.render("newpost.html", subject=subject, content=content, error=error)
-            #self.render("edit_recipe.html", content=content, s = self, categories = recipe_categories , error=error)
-            #upload_files = self.get_uploads('img')
         if error:
             self.render("edit_recipe.html", content=content, s = self, categories = recipe_categories , error=error)
 
@@ -645,7 +617,7 @@ class RecipePage(BasicHandler):
         for i in range(1,10,1):
             logging.error(edit_link)
         if page_name:
-            p = get_recipe_by_name(page_name)
+            p = Recipe.get_recipe_by_name(page_name)
 
 
             if p:
@@ -797,13 +769,8 @@ class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
         if page_url:
             recipe=get_recipe_by_name(str(page_url.groups()[0]))
             if recipe:
-                # recipe.small_picture = db.Blob(small_pic)
-                # recipe.big_picture = db.Blob(big_pic)
-                # recipe.avatar =  db.Blob(avatar)
-
                 recipe.picture_key = str(Pictures.add_picture(image,recipe.title,next_url))
                 recipe.put()
-
                 self.redirect(next_url)
         else:
             Pictures.add_picture(image,"Creation")

@@ -7,63 +7,6 @@ import logging
 from models import Pictures
 
 
-def top_recipes(update=False):
-    key = 'top_recipes'
-    recipes = memcache.get(key)
-    if recipes is None or update:
-        recipes = Recipe.query()
-        #recipes = ndb.gql("SELECT * FROM Recipe")
-        #results = recipes.fetch(10)
-        #recipes = list(recipes)
-        for recipe in recipes:
-            logging.error(recipe)
-        memcache.set(key, recipes)
-    return recipes
-
-
-def get_recipe_key(recipe_name):
-    """
-
-    :param recipe_name:
-    :return: key for given recipe name
-    """
-    key = Recipe.get_by_id(recipe_name).key()
-    return key
-
-
-def get_recipe_by_name(recipe_name):
-    """
-
-    :param recipe_name:
-    :return:
-    """
-    p = Recipe.get_by_id(recipe_name)
-
-    return p
-
-
-def add_recipe(id, owner, content, title, category):
-    p = Recipe(id=id, owner=owner, content=content, title=title, category=category).put()
-    #p.put()
-    return True
-
-#
-# def add_recipe(id, owner, content, title, category):
-#     p = Recipe(id=id, owner=owner, content=content, title=title, category=category).put()
-#     #p.put()
-#     return True
-
-
-def render_recipe(recipe, noPictures=True):
-    """
-    Render base_recipe.html
-    :param noPictures: default True. True = do not show the pictures
-    :return:
-    """
-    recipe._render_text = recipe.content.replace('\n', '<br>')
-    return render_str("base_recipe.html", p=recipe, noPictures=noPictures)
-
-
 class Recipe(ndb.Model):
     owner = ndb.StringProperty(required=True)
     content = ndb.TextProperty(required=True)
@@ -93,6 +36,10 @@ class Recipe(ndb.Model):
         :return:
         """
         Recipe(id=name, owner=owner, content=content, title=title, category=category).put()
+        if owner == 'admin':
+            Recipe.my_top_recipes(True)
+        else:
+            Recipe.your_top_recipes(True)
         #p.put()
         return True
 

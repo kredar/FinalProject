@@ -38,7 +38,7 @@ def ratingsForRecipe(recipe_name, update=False):
     """
     rating = memcache.get(recipe_name)
     if (rating is None) or (update is True):
-        recipe = get_recipe_by_name(recipe_name)
+        recipe = Recipe.get_recipe_by_name(recipe_name)
         ratings = Rating.query(Rating.recipe == recipe.key)
         #db.GqlQuery("SELECT * FROM Rating WHERE recipe_name = :1" , recipe_name)
         averageRating = calcAverageRating(ratings)
@@ -54,7 +54,7 @@ def update_rating(recipe_name, submitter, rating_value):
     :param rating_value:
     :return:
     """
-    recipe = get_recipe_by_name(recipe_name)
+    recipe = Recipe.get_recipe_by_name(recipe_name)
     ratings = Rating.query(Rating.submitter == submitter, Rating.recipe == recipe.key)
 
     ##ratings = recipe.ratings.fetch(1000)
