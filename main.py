@@ -819,6 +819,11 @@ class Tools(BasicHandler):
     def get(self):
         self.render('tools.html')
 
+class DeleteData(BasicHandler):
+    def get(self):
+        #db.delete(Recipe.all(keys_only=True))
+        #ndb.delete_multi(Recipe.query().fetch(100, keys_only=True))
+        ndb.delete_multi(Recipe.query().iter(keys_only = True))
 
 app = webapp2.WSGIApplication([('/img', Image),
                                ('/imgB', ImageB),
@@ -847,6 +852,7 @@ app = webapp2.WSGIApplication([('/img', Image),
                                ('/blog/newpost', NewPost),
                                 ('/flush', CacheFlush),
                                 ('/tools', Tools),
+                                  ('/delete_data', DeleteData),
                                ],
                               debug=True)
 
