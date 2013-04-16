@@ -147,7 +147,7 @@ class BasicHandler(webapp2.RequestHandler):
         if self.user:
             return self.user.name
         elif users.get_current_user():
-            logging.error("USER:  %s" %users.get_current_user().nickname() )
+            #logging.error("USER:  %s" %users.get_current_user().nickname() )
             return users.get_current_user().nickname()
         else:
             return None
@@ -172,7 +172,7 @@ class BasicHandler(webapp2.RequestHandler):
         """
         if self.userLogedIn():
             if self.userType() == 0:
-                if self.user.name == 'admin':
+                if self.user.name == ADMIN:
                     return True
                 else:
                     return False
@@ -463,10 +463,10 @@ class MyRecipesList(BasicHandler):
         category = self.request.get('category')
         recipes = Recipe.get_recipes_by_category(category, True)
 
-        if recipes:
-            self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
-        else:
-            self.redirect('/Welcome')
+        #if recipes:
+        self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
+        #else:
+        #    self.redirect('/Welcome')
 
     def post(self):
         """This
@@ -484,10 +484,10 @@ class YourRecipesList(BasicHandler):
         category = self.request.get('category')
         recipes = Recipe.get_recipes_by_category(category, False)
 
-        if recipes:
-            self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
-        else:
-            self.redirect('/Welcome')
+        #if recipes:
+        self.render('recipes.html', isLogedIn = self.userLogedIn(), recipes=recipes, categories=filter_categories)
+        #else:
+        #    self.redirect('/Welcome')
 
     def post(self):
         """This
@@ -511,26 +511,14 @@ class AddRecipe(BasicHandler):
         content = self.request.get('content')
         title= self.request.get('title')
         category = self.request.get('category')
-        logging.error("Page title %s" % title)
         pagename = "/" + title.replace(" ", "")
-        logging.error("Page name %s" % pagename)
         regex = re.compile(r'/([a-zA-Z0-9_-]+)$', re.UNICODE)
         r = regex.search(pagename)
 
         if r is None:
             error = "Recipe title should include only letters and digits"
         elif (Recipe.get_recipe_by_name(pagename)):
-        #     p=Recipe.get_by_key_name(pagename)
-        #     if p:
             error = "This recipe page already exist, please use other name"
-        # #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
-        # #
-        # elif ( not self.isUserAdmin() and Recipe.get_recipe_by_name(pagename)):
-        # #     p=Recipe.get_by_key_name(pagename)
-        # #     if p:
-        #     error = "This recipe page already exist, please use other name"
-        # #         self.render("edit_recipe.html", pagename = "", title = title, content="", s = self, categories = recipe_categories , error=error)
-        # #
         elif content and title and error == None:
             p = Recipe.add_recipe(name = pagename, owner = str(self.get_current_username()), content = content, title = title, category = category)
             page_link='/recipes%s' % pagename
@@ -546,12 +534,8 @@ class AddRecipe(BasicHandler):
 class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
 
     def get(self, page_name):
-        #page_name_l=page_name
         if self.userLogedIn():
             p=get_recipe_by_name(page_name)
-            #img_url= blobstoreService.createUploadUrl("/recipes/_edit%s" %page_name)
-            #upload_url = blobstore.create_upload_url('/upload')
-            #logging.error("Upload URL %s" % upload_url)
             if p:
                 self.render("edit_recipe.html", content=p.content, s = self, title = p.title, categories = recipe_categories)
             else:
@@ -561,15 +545,11 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
             self.redirect('/login')
 
     def post(self, page_name):
-        #self.redirect('/')
         if not self.userLogedIn():
             self.redirect('/login')
-
-        #subject = self.request.get('subject')
         content = self.request.get('content')
         title= self.request.get('title')
         category = self.request.get('category')
-        # logging.error("Page name %s" % page_name)
         if content and title:
             p=get_recipe_by_name(page_name)
             if p:
@@ -579,43 +559,20 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
             else:
                 #p = Recipe(key_name = page_name  , owner = str(self.get_user_name()), content = content, title = title, recipe_name = page_name , category = category)
                 add_recipe(id=page_name, owner=str(self.get_user_name()), content=content, title=title, category=category)
-                #photo = self.request.get('img')
-              # 'file' is file upload field in the form
-            #blob_info = upload_files[0]
-            #blob_info = upload_files[0]
-            #self.redirect('/serve/%s' % blob_info.key())
-
-            #p.photo = db.Blob(photo)
-
-            #h = History(page_name = page_name, content = content)
-
-            #h.put()
             page_link='/recipes%s' % page_name
-            # logging.error(page_name)
             self.redirect(str(page_link))
-            #self.redirect('/serve/%s' % blob_info.key())
-            #self.redirect('/?' + urllib.urlencode(
-            #    {'guestbook_name': guestbook_name}))
         elif not content:
             error = "Recipe content, please!"
-            #self.render("newpost.html", subject=subject, content=content, error=error)
             self.render("edit_recipe.html", title = title, content="", s = self, categories = recipe_categories , error=error)
         else:
             error = "Recipe title, please!"
-            #self.render("newpost.html", subject=subject, content=content, error=error)
             self.render("edit_recipe.html", content=content, s = self, categories = recipe_categories , error=error)
-        #upload_files = self.get_uploads('img')
-
 
 
 class RecipePage(BasicHandler):
 
     def get(self, page_name):
-        for i in range(1,10,1):
-            logging.error(page_name)
         edit_link="/recipes/_edit%s" % page_name
-        for i in range(1,10,1):
-            logging.error(edit_link)
         if page_name:
             p = Recipe.get_recipe_by_name(page_name)
 
@@ -683,79 +640,15 @@ class ContactUs(BasicHandler):
         msg.send()
         self.redirect('/Welcome')
 
-#class BlogFront(BasicHandler):
-#    def get(self):
-#        #self.render("underconstruction.html")
-#        def get(self):
-#            posts = greetings = Post.all().order('-created')
-#
-#            self.render('front.html', posts = posts)
-
-#class UploadPage(BasicHandler):
-#
-#    def get(self):
-#        upload_url = blobstore.create_upload_url('/upload')
-#        if self.user:
-#            next_url=self.request.headers.get('referer','/')
-#            logging.error("next url1 %s" %next_url)
-#            self.render("pic_upload.html", upload_url=upload_url, page_name = next_url)
-#        else:
-#            self.redirect('/login')
-
-
 class UploadPage(BasicHandler):
 
     def get(self):
-        #upload_url = blobstore.create_upload_url('/upload')
         if self.userLogedIn():
             next_url=self.request.headers.get('referer','/')
             # logging.error("next url1 %s" %next_url)
             self.render("pic_upload.html", upload_url='/upload', page_name = next_url)
         else:
             self.redirect('/login')
-
-# def rescale(img_data, width, height, halign='middle', valign='middle'):
-#
-#     """Resize then optionally crop a given image.
-#
-#     Attributes:
-#       img_data: The image data
-#       width: The desired width
-#       height: The desired height
-#       halign: Acts like photoshop's 'Canvas Size' function, horizontally
-#               aligning the crop to left, middle or right
-#       valign: Verticallly aligns the crop to top, middle or bottom
-#
-#     """
-#     image = img_data#images.Image(img_data)
-#
-#     desired_wh_ratio = float(width) / float(height)
-#     wh_ratio = float(image.width) / float(image.height)
-#
-#     if desired_wh_ratio > wh_ratio:
-#         # resize to width, then crop to height
-#         image.resize(width=width)
-#         image.execute_transforms()
-#         trim_y = (float(image.height - height) / 2) / image.height
-#         if valign == 'top':
-#             image.crop(0.0, 0.0, 1.0, 1 - (2 * trim_y))
-#         elif valign == 'bottom':
-#             image.crop(0.0, (2 * trim_y), 1.0, 1.0)
-#         else:
-#             image.crop(0.0, trim_y, 1.0, 1 - trim_y)
-#     else:
-#         # resize to height, then crop to width
-#         image.resize(height=height)
-#         image.execute_transforms()
-#         trim_x = (float(image.width - width) / 2) / image.width
-#         if halign == 'left':
-#             image.crop(0.0, 0.0, 1 - (2 * trim_x), 1.0)
-#         elif halign == 'right':
-#             image.crop((2 * trim_x), 0.0, 1.0, 1.0)
-#         else:
-#             image.crop(trim_x, 0.0, 1 - trim_x, 1.0)
-#
-#     return image.execute_transforms()
 
 class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
@@ -823,7 +716,8 @@ class DeleteData(BasicHandler):
     def get(self):
         #db.delete(Recipe.all(keys_only=True))
         #ndb.delete_multi(Recipe.query().fetch(100, keys_only=True))
-        ndb.delete_multi(Recipe.query().iter(keys_only = True))
+        if (self.isUserAdmin()):
+            ndb.delete_multi(Recipe.query().iter(keys_only = True))
 
 app = webapp2.WSGIApplication([('/img', Image),
                                ('/imgB', ImageB),

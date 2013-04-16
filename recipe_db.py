@@ -1,6 +1,7 @@
 __author__ = 'Artiom'
 
 from tools import *
+from defines import *
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 import logging
@@ -36,7 +37,7 @@ class Recipe(ndb.Model):
         :return:
         """
         Recipe(id=name, owner=owner, content=content, title=title, category=category).put()
-        if owner == 'admin':
+        if owner == ADMIN:
             Recipe.my_top_recipes(True)
         else:
             Recipe.your_top_recipes(True)
@@ -49,13 +50,13 @@ class Recipe(ndb.Model):
             if category == "All":
                 return Recipe.my_top_recipes()
             else:
-                recipes = Recipe.query(Recipe.category == category, Recipe.owner == 'admin').fetch(10)
+                recipes = Recipe.query(Recipe.category == category, Recipe.owner == ADMIN).fetch(10)
                 return recipes
         else:
             if category == "All":
                 return Recipe.your_top_recipes()
             else:
-                return Recipe.query(Recipe.category == category, Recipe.owner != 'admin').fetch(10)
+                return Recipe.query(Recipe.category == category, Recipe.owner != ADMIN).fetch(10)
 
     def update_recipe(self, r_id, owner, content, title, category):
         p = Recipe(id=r_id, owner=owner, content=content, title=title, category=category).put()
@@ -77,7 +78,7 @@ class Recipe(ndb.Model):
         key = 'my_top_recipes'
         recipes = memcache.get(key)
         if recipes is None or update:
-            recipes = Recipe.query(Recipe.owner == 'admin').fetch(10)
+            recipes = Recipe.query(Recipe.owner == ADMIN).fetch(10)
             memcache.set(key, recipes)
         return recipes
 
@@ -86,7 +87,7 @@ class Recipe(ndb.Model):
         key = 'your_top_recipes'
         recipes = memcache.get(key)
         if recipes is None or update:
-            recipes = Recipe.query(Recipe.owner != 'admin').fetch(10)
+            recipes = Recipe.query(Recipe.owner != ADMIN).fetch(10)
             memcache.set(key, recipes)
         return recipes
 
