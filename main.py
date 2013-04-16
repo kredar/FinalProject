@@ -415,7 +415,6 @@ class Login(BasicHandler):
         if not next_url or next_url.startswith('/login'):
             next_url='/Welcome'
 
-
         username = self.request.get('username')
         password = self.request.get('password')
 
@@ -535,7 +534,7 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
 
     def get(self, page_name):
         if self.userLogedIn():
-            p=get_recipe_by_name(page_name)
+            p=Recipe.get_recipe_by_name(page_name)
             if p:
                 self.render("edit_recipe.html", content=p.content, s = self, title = p.title, categories = recipe_categories)
             else:
@@ -551,14 +550,14 @@ class EditRecipe(BasicHandler):#,blobstore_handlers.BlobstoreUploadHandler):
         title= self.request.get('title')
         category = self.request.get('category')
         if content and title:
-            p=get_recipe_by_name(page_name)
+            p=Recipe.get_recipe_by_name(page_name)
             if p:
                 p.content=content
                 p.title=title
                 p.put()
             else:
                 #p = Recipe(key_name = page_name  , owner = str(self.get_user_name()), content = content, title = title, recipe_name = page_name , category = category)
-                add_recipe(id=page_name, owner=str(self.get_user_name()), content=content, title=title, category=category)
+                Recipe.add_recipe(id=page_name, owner=str(self.get_user_name()), content=content, title=title, category=category)
             page_link='/recipes%s' % page_name
             self.redirect(str(page_link))
         elif not content:
@@ -660,7 +659,7 @@ class UploadHandler(BasicHandler):#blobstore_handlers.BlobstoreUploadHandler):
         regex = re.compile("recipes(/(?:[a-zA-Z0-9_-]+/?)*)")
         r = regex.search(next_url)
         if page_url:
-            recipe=get_recipe_by_name(str(page_url.groups()[0]))
+            recipe=Recipe.get_recipe_by_name(str(page_url.groups()[0]))
             if recipe:
                 recipe.picture_key = str(Pictures.add_picture(image,recipe.title,next_url))
                 recipe.put()
