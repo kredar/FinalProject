@@ -1,8 +1,10 @@
 {
   "posts": [
     {
-      "id": 1,
-      "title": "hello"
+      "id": 300,
+      "title": "hello",
+      "name": "Artiom Kreimer",
+      "tel": "4168808888"
     }
   ],
   "profile": {
