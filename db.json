@@ -2,12 +2,6 @@
   "posts": [
     {
       "id": 300,
-      "title": "hello",
-      "name": "Artiom Kreimer",
-      "tel": "4168808888"
-    },
-    {
-      "id": 2,
       "title": [
         {"1":"hello",
         "2":"test2"}
