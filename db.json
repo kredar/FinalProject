@@ -2,11 +2,7 @@
   "posts": [
     {
       "id": 123,
-      "title": [
-        {"1":"hello",
-        "2":"test2"}
-        ],
-      "data_usage": 3.8
+      "data_usage": "3.8 GB"
     }
   ],
   "profile": {
