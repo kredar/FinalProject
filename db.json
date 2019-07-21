@@ -3,6 +3,10 @@
     {
       "id": 123,
       "data_usage": "5.2 GB"
+    },
+    {
+      "id": 124,
+      "account_balance": "$87.97"
     }
   ],
   "profile": {
